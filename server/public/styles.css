@@ -32,8 +32,11 @@ footer {
   border-radius: 5px;
   color: white;
   font-family: Quicksand, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
   height: 50px;
   width: 200px;
+  padding-left: 15px;
 }
 
 .alt-to-login {

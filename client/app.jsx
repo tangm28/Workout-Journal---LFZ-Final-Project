@@ -1,5 +1,6 @@
 import React from 'react';
 import AppContext from './lib/app-context';
+import Home from './pages/home';
 import Login from './pages/login';
 import NavBar from './components/navbar';
 import Footer from './components/footer';
@@ -8,6 +9,8 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      user: null,
+      isAuthorizing: true,
       route: parseRoute(window.location.hash)
     };
   }
@@ -22,24 +25,27 @@ export default class App extends React.Component {
       const newRoute = parseRoute(window.location.hash);
       this.setState({ route: newRoute });
     });
+    const user = false;
+    this.setState({ user, isAuthorizing: false });
   }
 
   renderPage() {
-    const { route } = this.state;
-    console.log(route);
-    if (route.path === '') {
+    console.log(this.state);
+    const { path } = this.state.route;
+    if (path === '') {
+      return <Home />;
+    }
+    if (path === 'log-in' || path === 'register') {
       return <Login />;
     }
-    // if (route.path === 'products') {
-    //   const productId = route.params.get('productId');
-    //   return <ProductDetails productId={productId} />;
-    // }
     // return <NotFound />;
   }
 
   render() {
-    const { route } = this.state;
-    const contextValue = { route };
+
+    if (this.state.isAuthorizing) return null;
+    const { user, route } = this.state;
+    const contextValue = { user, route };
     return (
     <AppContext.Provider value={contextValue}>
       <>
