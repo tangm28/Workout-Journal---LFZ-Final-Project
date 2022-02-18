@@ -1,35 +1,32 @@
 import React from 'react';
 import AppContext from '../lib/app-context';
+import AuthForm from '../components/auth-form';
 
-export default class Login extends React.Component {
-  renderHeader() {
-    if (this.context.route.path === '') {
-      return (
-        <>
-          <h1>Hello World!!!!</h1>
-        </>
-      );
-    }
+const styles = {
+  title: {
+    fontSize: 30,
+    fontWeight: 'bold'
   }
-
+};
+export default class Login extends React.Component {
   render() {
-    console.log(this.context.route.path);
-    // if (!this.context.user) return <Redirect to="sign-in" />;
+    const titleMessage = 'Workout Journal';
 
     return (
-      <div>
-        {this.renderHeader()}
+      <div className='container'>
+        <div >
+          <div >
+            <header className='text-center' style={styles.title}>
+              {titleMessage}
+            </header>
+            <div>
+              <AuthForm />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 }
-
-// export default function Login(props) {
-//   return (
-//     <div>
-//       <h1>Hello World</h1>
-//     </div>
-//   );
-// }
 
 Login.contextType = AppContext;

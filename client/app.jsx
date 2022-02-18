@@ -1,7 +1,8 @@
 import React from 'react';
 import AppContext from './lib/app-context';
 import Login from './pages/login';
-import Header from './components/header';
+import NavBar from './components/navbar';
+import Footer from './components/footer';
 import { parseRoute } from './lib';
 export default class App extends React.Component {
   constructor(props) {
@@ -42,8 +43,9 @@ export default class App extends React.Component {
     return (
     <AppContext.Provider value={contextValue}>
       <>
-        <Header />
+        <NavBar />
         {this.renderPage()}
+        <Footer />
       </>
     </AppContext.Provider>
     );

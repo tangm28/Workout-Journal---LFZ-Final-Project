@@ -1,0 +1,56 @@
+#root {
+  min-height: 100vh;
+  margin: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  align-items: start;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.align-start {
+  align-items: start;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.m-top20 {
+  margin-top: 20px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.container {
+  width: 100%;
+}
+
+header {
+  margin-bottom: 25px;
+}
+
+@media screen and (min-width: 320px) {
+  .container {
+    max-width: calc(320px * 0.9333);
+  }
+}
+
+@media screen and (min-width: 375px) {
+  .container {
+    max-width: calc(375px * 0.9333);
+  }
+}

@@ -2,14 +2,14 @@ import React from 'react';
 import AppContext from '../lib/app-context';
 
 const styles = {
-  header: {
+  navbar: {
     backgroundColor: '#1bc270',
     height: '50px'
   }
 };
 
-export default class Header extends React.Component {
-  renderHeader() {
+export default class Navbar extends React.Component {
+  renderNavbar() {
     if (this.context.route.path === '') {
       return (
         <>
@@ -20,14 +20,14 @@ export default class Header extends React.Component {
 
   render() {
     return (
-      <header style={styles.header}>
-        {this.renderHeader()}
-      </header>
+      <nav style={styles.navbar}>
+        {this.renderNavbar()}
+      </nav>
     );
   }
 }
 
-Header.contextType = AppContext;
+Navbar.contextType = AppContext;
 
 // export default function Header(props) {
 //   return (
