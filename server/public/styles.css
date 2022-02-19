@@ -13,7 +13,21 @@ footer {
   border-radius: 10px;
   margin: 0 auto;
   margin-top: 25px;
-  padding: 25px 20px 20px;
+  padding: 25px 15px 20px;
+}
+
+.widget-container {
+  background-color: #171717;
+  border-radius: 10px;
+  margin: 0 auto;
+  margin-top: 25px;
+  padding: 25px 10px 20px;
+}
+
+.container-secondary {
+  background-color: #2f2f2f;
+  border-radius: 10px;
+  padding: 25px 10px 20px;
 }
 
 .text-muted {
@@ -35,7 +49,22 @@ footer {
   font-size: 15px;
   font-weight: 500;
   height: 50px;
-  padding-left: 15px;
+  padding-left: 7px;
+}
+
+.input-secondary,
+.input-split70,
+.input-split35,
+.unit-selector {
+  background-color: #2f2f2f;
+  border: #8f8f8f solid 1px;
+  border-radius: 5px;
+  color: white;
+  font-family: Quicksand, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  height: 50px;
+  padding-left: 7px;
 }
 
 .btn-form {
@@ -50,7 +79,8 @@ footer {
   margin-top: 20px;
 }
 
-.input-primary:focus,
+input:focus,
+select:focus,
 .btn-form:focus,
 a:focus {
   outline: none !important;

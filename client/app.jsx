@@ -2,6 +2,7 @@ import React from 'react';
 import AppContext from './lib/app-context';
 import Home from './pages/home';
 import Login from './pages/login';
+import Profile from './pages/profile';
 import NavBar from './components/navbar';
 import Footer from './components/footer';
 import { parseRoute } from './lib';
@@ -36,6 +37,9 @@ export default class App extends React.Component {
     }
     if (path === 'log-in' || path === 'register') {
       return <Login />;
+    }
+    if (path === 'profile' || path === 'create-profile') {
+      return <Profile />;
     }
     // return <NotFound />;
   }

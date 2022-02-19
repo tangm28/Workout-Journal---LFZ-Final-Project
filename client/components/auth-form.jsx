@@ -44,8 +44,8 @@ export default class AuthForm extends React.Component {
       ? '#register'
       : '#log-in';
     const alternatActionText = action === 'log-in'
-      ? ['Register', ' or continue as ', 'Guest']
-      : ['Log in instead', '', ''];
+      ? 'Register'
+      : 'Log in';
     const submitButtonText = action === 'log-in'
       ? 'Log In'
       : 'Register';
@@ -93,14 +93,10 @@ export default class AuthForm extends React.Component {
         <div className="m-top20">
           <small>
             <a className="text-muted" href={alternateActionHref}>
-              {alternatActionText[0]}
+              {alternatActionText}
+            </a> or continue as <a className="text-muted" href='#create-profile'>
+              Guest
             </a>
-            <span className={action === 'log-in' ? '' : 'hidden' } >
-              {alternatActionText[1]}
-              <a className="text-muted" href='#profile'>
-                {alternatActionText[2]}
-              </a>
-            </span>
           </small>
         </div>
         <div className='row justify-center'>
