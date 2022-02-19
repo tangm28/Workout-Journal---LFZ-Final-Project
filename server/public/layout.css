@@ -6,6 +6,10 @@
   align-items: start;
 }
 
+.hidden {
+  display: none;
+}
+
 .row {
   display: flex;
   flex-wrap: wrap;
@@ -47,10 +51,22 @@ header {
   .container {
     max-width: calc(320px * 0.9333);
   }
+
+  .input-primary {
+    width: 100%;
+  }
 }
 
 @media screen and (min-width: 375px) {
   .container {
     max-width: calc(375px * 0.9333);
+  }
+
+  .form-label {
+    width: 100px;
+  }
+
+  .input-primary {
+    width: 200px;
   }
 }

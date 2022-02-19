@@ -10,7 +10,14 @@ const styles = {
 };
 export default class Login extends React.Component {
   render() {
-    const titleMessage = 'Workout Journal';
+    const { user, route } = this.context;
+
+    // console.log(route);
+
+    // const titleMessage = 'Workout Journal';
+    const titleMessage = route.path === 'log-in'
+      ? 'Workout Journal'
+      : 'Register';
 
     return (
       <div className='container'>
@@ -20,7 +27,10 @@ export default class Login extends React.Component {
               {titleMessage}
             </header>
             <div>
-              <AuthForm />
+              <AuthForm
+                key={route.path}
+                action={route.path}
+              />
             </div>
           </div>
         </div>

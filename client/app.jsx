@@ -30,7 +30,6 @@ export default class App extends React.Component {
   }
 
   renderPage() {
-    console.log(this.state);
     const { path } = this.state.route;
     if (path === '') {
       return <Home />;

@@ -35,12 +35,7 @@ footer {
   font-size: 15px;
   font-weight: 500;
   height: 50px;
-  width: 200px;
   padding-left: 15px;
-}
-
-.alt-to-login {
-  margin-top: 20px;
 }
 
 .btn-form {
@@ -52,5 +47,17 @@ footer {
   font-size: 18px;
   font-weight: bold;
   padding: 10px 50px;
+  margin-top: 20px;
+}
+
+.input-primary:focus,
+.btn-form:focus,
+a:focus {
+  outline: none !important;
+  border-color: 1px solid #1bc270 !important;
+  box-shadow: 0 0 2px 3px #1bc270 !important;
+}
+
+.alt-to-login {
   margin-top: 20px;
 }
