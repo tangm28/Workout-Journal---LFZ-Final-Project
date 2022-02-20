@@ -13,11 +13,11 @@ export default class ProfileForm extends React.Component {
       userWeight: 0,
       userWeightUnit: 'lb',
       goal: 'maintain',
-      activityLevel: 'noActivity'
-
+      activityLevel: 'noActivity',
+      userId: this.props.userData
     };
     this.handleChange = this.handleChange.bind(this);
-    // this.onChange = this.onChange.bind(this);
+    this.onChange = this.onChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -26,30 +26,29 @@ export default class ProfileForm extends React.Component {
     this.setState({ [name]: value });
   }
 
-  // onChange(event) {
-  //   const { name, value } = event.target;
-  //   this.setState({ [name]: value });
-  // }
+  onChange(event) {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  }
 
   handleSubmit(event) {
     event.preventDefault();
-    // const { action } = this.props;
-    // const req = {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify(this.state)
-    // };
-    // fetch(`/api/auth/${action}`, req)
-    //   .then(res => res.json())
-    //   .then(result => {
-    //     if (action === 'sign-up') {
-    //       window.location.hash = 'sign-in';
-    //     } else if (result.user && result.token) {
-    //       this.props.onSignIn(result);
-    //     }
-    //   });
+    const { action } = this.props;
+    const req = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.state)
+    };
+    fetch(`/api/account/${action}`, req)
+      .then(res => res.json())
+      .then(result => {
+        if (action === 'create-profile') {
+          window.location.hash = 'create-maxes';
+        }
+
+      });
   }
 
   render() {
@@ -116,7 +115,7 @@ export default class ProfileForm extends React.Component {
                 <input
                   required
                   id="heightPrimary"
-                  type="text"
+                  type="number"
                   name="heightPrimary"
                   placeholder={heightPlaceholder[0]}
                   onChange={handleChange}
@@ -124,7 +123,7 @@ export default class ProfileForm extends React.Component {
                 <input
                   required
                   id="heightSecondary"
-                  type="text"
+                  type="number"
                   name="heightSecondary"
                   placeholder={heightPlaceholder[1]}
                   onChange={handleChange}
@@ -144,7 +143,7 @@ export default class ProfileForm extends React.Component {
               <input
                 required
                 id="userWeight"
-                type="text"
+                type="number"
                 name="userWeight"
                 placeholder={weightPlaceholder}
                 onChange={handleChange}

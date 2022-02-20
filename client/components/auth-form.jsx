@@ -5,7 +5,8 @@ export default class AuthForm extends React.Component {
     super(props);
     this.state = {
       username: '',
-      password: ''
+      password: '',
+      passwordConfirmation: ''
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -18,87 +19,117 @@ export default class AuthForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    // const { action } = this.props;
-    // const req = {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify(this.state)
-    // };
-    // fetch(`/api/auth/${action}`, req)
-    //   .then(res => res.json())
-    //   .then(result => {
-    //     if (action === 'sign-up') {
-    //       window.location.hash = 'sign-in';
-    //     } else if (result.user && result.token) {
-    //       this.props.onSignIn(result);
-    //     }
-    //   });
+    const { action } = this.props;
+    let reqBody = {};
+    if (action !== 'register') {
+      const { username, password } = this.state;
+      reqBody = {
+        username: username,
+        password: password
+      };
+    } else {
+      const { username, password, passwordConfirmation } = this.state;
+      reqBody = {
+        username: username,
+        password: password,
+        passwordConfirmation: passwordConfirmation
+      };
+    }
+    const req = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(reqBody)
+    };
+    fetch(`/api/auth/${action}`, req)
+      .then(res => res.json())
+      .then(result => {
+        if (action === 'register') {
+          window.location.hash = 'create-profile';
+          this.props.onRegister(result);
+        } else if (result.user && result.token) {
+          this.props.onSignIn(result);
+        }
+      });
   }
 
   render() {
     const { action } = this.props;
     const { handleChange, handleSubmit } = this;
+    const altUsernameText = action === 'log-in'
+      ? 'username'
+      : '';
+    const altPasswordText = action === 'log-in'
+      ? 'password'
+      : '';
     const alternateActionHref = action === 'log-in'
       ? '#register'
       : '#log-in';
-    const alternatActionText = action === 'log-in'
+    const alternateActionText = action === 'log-in'
       ? 'Register'
-      : 'Log in';
+      : 'Log In';
+    const alternateActionVerbiage = action === 'log-in'
+      ? ' new account'
+      : '';
     const submitButtonText = action === 'log-in'
       ? 'Log In'
       : 'Register';
     return (
       <form className="" onSubmit={handleSubmit}>
+        {/* Username */}
         <div className="row justify-between align-center">
-          <label htmlFor="username" className="form-label">
+          <label htmlFor='username' className="form-label">
             Username:
           </label>
           <input
             required
             autoFocus
-            id="username"
+            id='username'
             type="text"
-            name="username"
+            name='username'
+            autoComplete={altUsernameText}
             onChange={handleChange}
             className="input-primary" />
         </div>
+        {/* Password */}
         <div className="row justify-between align-center m-top20">
-          <label htmlFor="password" className="form-label">
+          <label htmlFor='password' className="form-label">
             Password:
           </label>
           <input
             required
-            id="password"
+            id='password'
             type="password"
-            name="password"
+            name='password'
+            autoComplete={altPasswordText}
             onChange={handleChange}
             className="input-primary" />
         </div>
+        {/* Password Confirmation */}
         <div className={ action === 'log-in' ? 'hidden' : '' }>
           <div className="row justify-between align-center m-top20">
-            <label htmlFor="password-confirmation" className="form-label">
+            <label htmlFor="passwordConfirmation" className="form-label">
               Confirm Password:
             </label>
             <input
               required
-              id="password-confirmation"
-              type="password-confirmation"
-              name="password-confirmation"
+              id="passwordConfirmation"
+              type="password"
+              name="passwordConfirmation"
               onChange={handleChange}
               className="input-primary" />
           </div>
         </div>
+        {/* Switch between log in and register */}
         <div className="m-top20">
           <small>
             <a className="text-muted" href={alternateActionHref}>
-              {alternatActionText}
-            </a> or continue as <a className="text-muted" href='#create-profile'>
-              Guest
-            </a>
+              {alternateActionText}
+            </a> {alternateActionVerbiage}
           </small>
         </div>
+        {/* Button */}
         <div className='row justify-center'>
           <button type="submit" className="btn-form">
             {submitButtonText}

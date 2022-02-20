@@ -1,8 +1,10 @@
 import React from 'react';
 import AppContext from './lib/app-context';
+import decodeToken from './lib/decode-token';
 import Home from './pages/home';
 import Login from './pages/login';
 import Profile from './pages/profile';
+import TrainingMaxes from './pages/trainingMaxes';
 import NavBar from './components/navbar';
 import Footer from './components/footer';
 import { parseRoute } from './lib';
@@ -12,8 +14,11 @@ export default class App extends React.Component {
     this.state = {
       user: null,
       isAuthorizing: true,
-      route: parseRoute(window.location.hash)
+      route: parseRoute(window.location.hash),
+      testUser: null
     };
+    this.handleRegister = this.handleRegister.bind(this);
+    this.handleSignIn = this.handleSignIn.bind(this);
   }
 
   componentDidMount() {
@@ -26,8 +31,20 @@ export default class App extends React.Component {
       const newRoute = parseRoute(window.location.hash);
       this.setState({ route: newRoute });
     });
-    const user = false;
+    const token = window.localStorage.getItem('react-context-jwt');
+    const user = token ? decodeToken(token) : null;
     this.setState({ user, isAuthorizing: false });
+  }
+
+  handleRegister(result) {
+    const { userId } = result;
+    this.setState({ testUser: userId });
+  }
+
+  handleSignIn(result) {
+    const { user, token } = result;
+    window.localStorage.setItem('react-context-jwt', token);
+    this.setState({ user });
   }
 
   renderPage() {
@@ -41,14 +58,19 @@ export default class App extends React.Component {
     if (path === 'profile' || path === 'create-profile') {
       return <Profile />;
     }
+    if (path === 'update-maxes' || path === 'create-maxes') {
+      return <TrainingMaxes />;
+    }
+
     // return <NotFound />;
   }
 
   render() {
 
     if (this.state.isAuthorizing) return null;
-    const { user, route } = this.state;
-    const contextValue = { user, route };
+    const { user, route, testUser } = this.state;
+    const { handleRegister, handleSignIn } = this;
+    const contextValue = { user, route, testUser, handleRegister, handleSignIn };
     return (
     <AppContext.Provider value={contextValue}>
       <>

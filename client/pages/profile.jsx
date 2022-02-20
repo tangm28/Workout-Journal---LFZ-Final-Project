@@ -1,4 +1,5 @@
 import React from 'react';
+import Redirect from '../components/redirect';
 import AppContext from '../lib/app-context';
 import ProfileForm from '../components/profile-form';
 
@@ -10,9 +11,10 @@ const styles = {
 };
 export default class Profile extends React.Component {
   render() {
-    const { user, route } = this.context;
+    // if (!this.context.user) return <Redirect to="log-in" />;
+    const { user, route, testUser } = this.context;
 
-    // console.log(route);
+    console.log(testUser);
 
     // const titleMessage = 'Workout Journal';
     const titleMessage = route.path === 'create-profile'
@@ -30,6 +32,7 @@ export default class Profile extends React.Component {
               <ProfileForm
                 key={route.path}
                 action={route.path}
+                userData={testUser}
               />
             </div>
           </div>

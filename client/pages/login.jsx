@@ -1,4 +1,5 @@
 import React from 'react';
+import Redirect from '../components/redirect';
 import AppContext from '../lib/app-context';
 import AuthForm from '../components/auth-form';
 
@@ -10,11 +11,10 @@ const styles = {
 };
 export default class Login extends React.Component {
   render() {
-    const { user, route } = this.context;
+    const { user, route, handleRegister, handleSignIn } = this.context;
 
-    // console.log(route);
+    if (user) return <Redirect to="" />;
 
-    // const titleMessage = 'Workout Journal';
     const titleMessage = route.path === 'log-in'
       ? 'Workout Journal'
       : 'Register';
@@ -30,6 +30,8 @@ export default class Login extends React.Component {
               <AuthForm
                 key={route.path}
                 action={route.path}
+                onSignIn={handleSignIn}
+                onRegister={handleRegister}
               />
             </div>
           </div>
