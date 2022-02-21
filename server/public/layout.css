@@ -68,6 +68,18 @@ header {
     width: 100%;
   }
 
+  .maxes-container {
+    width: 250px;
+  }
+
+  .form-label-maxes {
+    width: 150px;
+  }
+
+  .input-maxes {
+    width: 80px;
+  }
+
   .input-split35 {
     width: 80px;
   }
