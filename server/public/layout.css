@@ -31,12 +31,18 @@
   justify-content: center;
 }
 
+.justify-end {
+  justify-content: flex-end;
+}
+
 .flex-reverse {
   flex-direction: row-reverse;
 }
 
 .m-top20 {
-  margin-top: 20px;
+  margin: 20px auto 0;
+
+  /* margin-top: 20px; */
 }
 
 .text-center {
@@ -44,12 +50,22 @@
 }
 
 .container,
-.widget-container {
+.widget-container,
+.modal {
   width: 100%;
 }
 
 .unit-selector {
   width: 50px;
+}
+
+.input-maxes-calc,
+.calc-label {
+  width: 80px;
+}
+
+.input-calc-container {
+  width: 140px;
 }
 
 header {
@@ -60,6 +76,10 @@ header {
   .container,
   .widget-container {
     max-width: calc(320px * 0.9333);
+  }
+
+  .modal {
+    max-width: 280px;
   }
 
   .input-primary,
@@ -93,6 +113,10 @@ header {
   .container,
   .widget-container {
     max-width: calc(375px * 0.9333);
+  }
+
+  .modal {
+    max-width: 330px;
   }
 
   .form-label {

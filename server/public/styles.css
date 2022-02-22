@@ -8,6 +8,12 @@ footer {
   min-height: 50px;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
 .container {
   background-color: #171717;
   border-radius: 10px;
@@ -34,7 +40,8 @@ footer {
   color: #2cc47a;
 }
 
-.maxes-text {
+.maxes-text,
+.calc-text {
   margin: 25px 15px;
 }
 
@@ -76,8 +83,34 @@ footer {
   line-height: 30px;
 }
 
+.overlay {
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #171717;
+  overflow: auto;
+  border: #8f8f8f solid 1px;
+  border-radius: 5px;
+  outline: none;
+  padding: 20px;
+}
+
 .form-label,
-.form-label-maxes {
+.form-label-maxes,
+.calc-label {
   font-size: 18px;
   font-weight: bold;
   padding: 5px 0;
@@ -98,7 +131,8 @@ footer {
 .input-secondary,
 .input-split70,
 .input-split35,
-.unit-selector {
+.unit-selector,
+.unit-selector-calc {
   background-color: #2f2f2f;
   border: #8f8f8f solid 1px;
   border-radius: 5px;
@@ -110,8 +144,24 @@ footer {
   padding-left: 7px;
 }
 
+.unit-selector-calc {
+  background-color: #171717;
+}
+
 .input-maxes {
   background-color: #2f2f2f;
+  border: #8f8f8f solid 1px;
+  border-radius: 5px;
+  color: white;
+  font-family: Quicksand, sans-serif;
+  font-size: 30px;
+  font-weight: 500;
+  height: 50px;
+  text-align: center;
+}
+
+.input-maxes-calc {
+  background-color: #171717;
   border: #8f8f8f solid 1px;
   border-radius: 5px;
   color: white;
@@ -131,6 +181,18 @@ footer {
   font-size: 18px;
   font-weight: bold;
   padding: 10px 50px;
+  margin-top: 20px;
+}
+
+.btn-modal {
+  background-color: #1bc270;
+  border: none;
+  border-radius: 20px;
+  color: white;
+  font-family: Quicksand, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 35px;
   margin-top: 20px;
 }
 

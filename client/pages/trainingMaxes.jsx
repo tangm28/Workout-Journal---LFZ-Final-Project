@@ -7,11 +7,16 @@ const styles = {
   title: {
     fontSize: 30,
     fontWeight: 'bold'
+  },
+  openCalc: {
+    color: '#1bc270',
+    textDecoration: 'underline'
   }
 };
 export default class TrainingMaxes extends React.Component {
+
   render() {
-    const { user, route, testUser } = this.context;
+    const { user, route, testUser, handleFullModal } = this.context;
 
     return (
       <div className='widget-container'>
@@ -21,9 +26,9 @@ export default class TrainingMaxes extends React.Component {
         <p className='maxes-text'>
           What is your 1 rep max for the following exercises?
           (If you&apos;re not sure, that&apos;s okay.
-          Use this <a className="text-muted" href=''>
+          Use this <span onClick={handleFullModal} style={styles.openCalc}>
             calculator
-          </a>
+          </span>
           )</p>
         <div>
           <div >
@@ -31,6 +36,7 @@ export default class TrainingMaxes extends React.Component {
               <MaxesForm
                 key={route.path}
                 action={route.path}
+                openModal={handleFullModal}
               />
             </div>
           </div>

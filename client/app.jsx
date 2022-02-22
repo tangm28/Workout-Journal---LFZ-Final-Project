@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Modal from 'react-modal';
 import AppContext from './lib/app-context';
 import decodeToken from './lib/decode-token';
 import Home from './pages/home';
@@ -7,7 +8,10 @@ import Profile from './pages/profile';
 import TrainingMaxes from './pages/trainingMaxes';
 import NavBar from './components/navbar';
 import Footer from './components/footer';
+import MaxesCalculator from './components/maxes-calculator';
 import { parseRoute } from './lib';
+
+Modal.setAppElement('#root');
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -15,10 +19,15 @@ export default class App extends React.Component {
       user: null,
       isAuthorizing: true,
       route: parseRoute(window.location.hash),
-      testUser: null
+      testUser: null,
+      isOpen: false,
+      modal: false
     };
+    // const [isOpen, setIsOpen] = useState(false);
+    this.handleFullModal = this.handleFullModal.bind(this);
     this.handleRegister = this.handleRegister.bind(this);
     this.handleSignIn = this.handleSignIn.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
@@ -36,6 +45,11 @@ export default class App extends React.Component {
     this.setState({ user, isAuthorizing: false });
   }
 
+  handleClick(event) {
+    // this.setState({ isClicked: !this.state.isClicked });
+    console.log(event.target);
+  }
+
   handleRegister(result) {
     const { userId } = result;
     this.setState({ testUser: userId });
@@ -45,6 +59,11 @@ export default class App extends React.Component {
     const { user, token } = result;
     window.localStorage.setItem('react-context-jwt', token);
     this.setState({ user });
+  }
+
+  handleFullModal() {
+    const { isOpen } = this.state;
+    this.setState({ isOpen: !isOpen });
   }
 
   renderPage() {
@@ -68,12 +87,21 @@ export default class App extends React.Component {
   render() {
 
     if (this.state.isAuthorizing) return null;
-    const { user, route, testUser } = this.state;
-    const { handleRegister, handleSignIn } = this;
-    const contextValue = { user, route, testUser, handleRegister, handleSignIn };
+    const { user, route, testUser, setIsOpen, isOpen } = this.state;
+    const { handleRegister, handleSignIn, handleFullModal, handleClick } = this;
+    const contextValue = { user, route, testUser, handleRegister, handleSignIn, handleFullModal };
     return (
     <AppContext.Provider value={contextValue}>
       <>
+        <Modal
+          isOpen={isOpen}
+          // onRequestClose={toggleModal}
+          className='modal'
+          overlayClassName='overlay'
+          contentLabel="My dialog"
+        >
+            <MaxesCalculator />
+        </Modal>
         <NavBar />
         {this.renderPage()}
         <Footer />
