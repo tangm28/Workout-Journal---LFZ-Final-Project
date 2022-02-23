@@ -94,7 +94,7 @@ app.post('/api/account/create-profile', (req, res, next) => {
     userWeight, userWeightUnit,
     goal, activityLevel, userId
   } = req.body;
-  // console.log(Number(heightSecondary));
+  // console.log(req.body);
   if (!firstName || !lastName || !sex ||
     !heightPrimary || !heightSecondary || !userHeightUnit ||
     !userWeight || !userWeightUnit ||
@@ -118,14 +118,50 @@ app.post('/api/account/create-profile', (req, res, next) => {
       `;
   let height = 0;
   if (userHeightUnit === 'ft') {
-    height = Number(heightPrimary * 12) + Number(heightSecondary);
+    height = Number(heightPrimary) + (Number(heightSecondary) / 12);
   } else {
-    height = Number(heightPrimary * 100) + Number(heightSecondary);
+    height = Number(heightPrimary) + (Number(heightSecondary) / 100);
   }
   const params = [
     firstName, lastName, sex,
     height, userHeightUnit, userWeight, userWeightUnit,
     goal, activityLevel, userId
+  ];
+  db.query(sql, params)
+    .then(result => {
+      const [user] = result.rows;
+      res.status(201).json(user);
+    })
+    .catch(err => next(err));
+
+});
+
+app.post('/api/account/create-maxes', (req, res, next) => {
+  const {
+    benchMax, squatMax, deadliftMax, ohpMax,
+    maxesUnit, userId
+  } = req.body;
+
+  if (!benchMax || !squatMax || !deadliftMax || !ohpMax ||
+    !maxesUnit || !userId) {
+    throw new ClientError(400, 'all fields need to be completed');
+  }
+  if (Number(benchMax) < 0 || Number(squatMax) < 0 ||
+    Number(deadliftMax) < 0 || Number(ohpMax) < 0) {
+    throw new ClientError(401, 'please enter valid positive number');
+  }
+
+  const sql = `
+        insert into "oneRepMaxes" (
+          "benchMax", "squatMax", "deadliftMax", "ohpMax",
+          "maxesUnit", "userId"
+          )
+        values ($1, $2, $3, $4, $5, $6 )
+        returning *
+      `;
+  const params = [
+    benchMax, squatMax, deadliftMax, ohpMax,
+    maxesUnit, userId
   ];
   db.query(sql, params)
     .then(result => {

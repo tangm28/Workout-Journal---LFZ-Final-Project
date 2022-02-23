@@ -1,5 +1,5 @@
 import React from 'react';
-import Redirect from '../components/redirect';
+// import Redirect from '../components/redirect';
 import AppContext from '../lib/app-context';
 import MaxesForm from '../components/maxes-form';
 
@@ -16,7 +16,7 @@ const styles = {
 export default class TrainingMaxes extends React.Component {
 
   render() {
-    const { user, route, testUser, handleFullModal } = this.context;
+    const { route, testUser, handleFullModal } = this.context;
 
     return (
       <div className='widget-container'>
@@ -37,6 +37,7 @@ export default class TrainingMaxes extends React.Component {
                 key={route.path}
                 action={route.path}
                 openModal={handleFullModal}
+                userData={testUser}
               />
             </div>
           </div>

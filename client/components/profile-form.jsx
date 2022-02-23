@@ -6,7 +6,7 @@ export default class ProfileForm extends React.Component {
     this.state = {
       firstName: '',
       lastName: '',
-      sex: '',
+      sex: 'male',
       heightPrimary: 0,
       heightSecondary: 0,
       userHeightUnit: 'ft',
@@ -53,10 +53,7 @@ export default class ProfileForm extends React.Component {
 
   render() {
     const {
-      firstName, lastName, sex,
-      heightPrimary, heightSecondary, userHeightUnit,
-      userWeight, userWeightUnit,
-      goal, activityLevel
+      userHeightUnit, userWeightUnit
     } = this.state;
     const { action } = this.props;
     const { handleChange, handleSubmit } = this;

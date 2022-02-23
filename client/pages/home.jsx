@@ -20,7 +20,7 @@ export default class Home extends React.Component {
 
     return (
       <div>
-
+        <h1>Main Page</h1>
       </div>
     );
   }

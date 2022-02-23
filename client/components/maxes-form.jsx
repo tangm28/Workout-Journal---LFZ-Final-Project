@@ -23,7 +23,7 @@ export default class MaxesForm extends React.Component {
 
   handleClick(event) {
     // this.setState({ isClicked: !this.state.isClicked });
-    console.log(event.target.className);
+    // console.log(event.target.className);
     if (event.target.className === 'toggle-on' && event.target.textContent === 'lb') {
       this.setState({ maxesUnit: 'kg' });
     }
@@ -34,27 +34,28 @@ export default class MaxesForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    // const { action } = this.props;
-    // const req = {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify(this.state)
-    // };
-    // fetch(`/api/account/${action}`, req)
-    //   .then(res => res.json())
-    //   .then(result => {
-    //     if (action === 'create-profile') {
-    //       window.location.hash = 'create-maxes';
-    //     }
+    const { action } = this.props;
+    // console.log(this.state);
+    const req = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.state)
+    };
+    fetch(`/api/account/${action}`, req)
+      .then(res => res.json())
+      .then(result => {
+        if (action === 'create-maxes') {
+          window.location.hash = '';
+        }
 
-    //   });
+      });
   }
 
   render() {
     const {
-      maxesUnit, benchMax, squatMax, deadliftMax, ohpMax
+      maxesUnit
     } = this.state;
     const { action } = this.props;
     const { handleChange, handleSubmit } = this;

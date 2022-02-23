@@ -40,8 +40,6 @@ export default class MaxesForm extends React.Component {
   }
 
   handleClick(event) {
-    // this.setState({ isClicked: !this.state.isClicked });
-    console.log(event.target.className);
     if (event.target.className === 'toggle-on' && event.target.textContent === 'lb') {
       this.setState({ maxesUnit: 'kg' });
     }
@@ -86,15 +84,10 @@ export default class MaxesForm extends React.Component {
     const {
       isCalculating, calcmaxesUnit, result
     } = this.state;
-    // const { action } = this.props;
     const { handleChange, handleSubmit } = this;
-    // const toggleClass = maxesUnit === 'lb'
-    //   ? ['toggle-on', 'toggle-off']
-    //   : ['toggle-off', 'toggle-on'];
     const calculatorText = isCalculating
       ? ['hidden', '', 'Got It']
       : ['', 'hidden', 'Calculate'];
-    // console.log();
     return (
       <div>
         <div className='row justify-end'>

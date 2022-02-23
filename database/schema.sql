@@ -21,12 +21,13 @@ CREATE TABLE "profiles" (
 	"firstName" TEXT NOT NULL,
 	"lastName" TEXT NOT NULL,
 	"sex" TEXT NOT NULL,
-	"height" integer NOT NULL,
+	"height" DECIMAL NOT NULL,
 	"heightUnit" TEXT NOT NULL,
-	"weight" integer NOT NULL,
+	"weight" DECIMAL NOT NULL,
 	"weightUnit" TEXT NOT NULL,
 	"goal" TEXT NOT NULL,
 	"activity" TEXT NOT NULL,
+  "createdAt" TIMESTAMPTZ NOT NULL default now(),
 	"userId" integer NOT NULL,
   CONSTRAINT "profiles_pk" PRIMARY KEY ("profileId")
 ) WITH (
