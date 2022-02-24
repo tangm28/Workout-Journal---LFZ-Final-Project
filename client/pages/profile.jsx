@@ -11,10 +11,9 @@ const styles = {
 };
 export default class Profile extends React.Component {
   render() {
-    // if (!this.context.user) return <Redirect to="log-in" />;
-    const { user, route, testUser } = this.context;
+    const { route, tempUser } = this.context;
 
-    console.log(testUser);
+    if (!tempUser) return <Redirect to="log-in" />;
 
     // const titleMessage = 'Workout Journal';
     const titleMessage = route.path === 'create-profile'
@@ -32,7 +31,7 @@ export default class Profile extends React.Component {
               <ProfileForm
                 key={route.path}
                 action={route.path}
-                userData={testUser}
+                userData={tempUser}
               />
             </div>
           </div>

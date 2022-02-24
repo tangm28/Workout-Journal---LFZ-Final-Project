@@ -45,6 +45,7 @@ export default class MaxesForm extends React.Component {
       .then(result => {
         if (action === 'create-maxes') {
           window.location.hash = 'log-in';
+          this.props.onRegister(result);
         }
 
       });

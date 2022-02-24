@@ -19,23 +19,17 @@ export default class App extends React.Component {
       user: null,
       isAuthorizing: true,
       route: parseRoute(window.location.hash),
-      testUser: null,
+      tempUser: null,
       isOpen: false,
       modal: false
     };
-    // const [isOpen, setIsOpen] = useState(false);
     this.handleFullModal = this.handleFullModal.bind(this);
     this.handleRegister = this.handleRegister.bind(this);
     this.handleLogIn = this.handleLogIn.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.handleProfileCreation = this.handleProfileCreation.bind(this);
   }
 
   componentDidMount() {
-    /**
-     * Listen for hash change events on the window object
-     * Each time the window.location.hash changes, parse
-     * it with the parseRoute() function and update state
-     */
     window.addEventListener('hashchange', () => {
       const newRoute = parseRoute(window.location.hash);
       this.setState({ route: newRoute });
@@ -47,7 +41,11 @@ export default class App extends React.Component {
 
   handleRegister(result) {
     const { userId } = result;
-    this.setState({ testUser: userId });
+    this.setState({ tempUser: userId });
+  }
+
+  handleProfileCreation() {
+    this.setState({ tempUser: null });
   }
 
   handleLogIn(result) {
@@ -80,11 +78,10 @@ export default class App extends React.Component {
   }
 
   render() {
-
     if (this.state.isAuthorizing) return null;
-    const { user, route, testUser, isOpen } = this.state;
-    const { handleRegister, handleLogIn, handleFullModal } = this;
-    const contextValue = { user, route, testUser, handleRegister, handleLogIn, handleFullModal };
+    const { user, route, tempUser, isOpen } = this.state;
+    const { handleRegister, handleLogIn, handleFullModal, handleProfileCreation } = this;
+    const contextValue = { user, route, tempUser, handleRegister, handleLogIn, handleFullModal, handleProfileCreation };
     return (
     <AppContext.Provider value={contextValue}>
       <>
