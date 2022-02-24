@@ -22,8 +22,6 @@ export default class MaxesForm extends React.Component {
   }
 
   handleClick(event) {
-    // this.setState({ isClicked: !this.state.isClicked });
-    // console.log(event.target.className);
     if (event.target.className === 'toggle-on' && event.target.textContent === 'lb') {
       this.setState({ maxesUnit: 'kg' });
     }
@@ -35,7 +33,6 @@ export default class MaxesForm extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const { action } = this.props;
-    // console.log(this.state);
     const req = {
       method: 'POST',
       headers: {
@@ -47,7 +44,7 @@ export default class MaxesForm extends React.Component {
       .then(res => res.json())
       .then(result => {
         if (action === 'create-maxes') {
-          window.location.hash = '';
+          window.location.hash = 'log-in';
         }
 
       });
@@ -88,6 +85,7 @@ export default class MaxesForm extends React.Component {
               id="benchMax"
               type="number"
               name="benchMax"
+              value={this.state.benchMax}
               onChange={handleChange}
               className="input-maxes" />
           </div>
@@ -100,6 +98,7 @@ export default class MaxesForm extends React.Component {
               id="squatMax"
               type="number"
               name="squatMax"
+              value={this.state.squatMax}
               onChange={handleChange}
               className="input-maxes" />
           </div>
@@ -112,6 +111,7 @@ export default class MaxesForm extends React.Component {
               id="deadliftMax"
               type="number"
               name="deadliftMax"
+              value={this.state.deadliftMax}
               onChange={handleChange}
               className="input-maxes" />
           </div>
@@ -124,6 +124,7 @@ export default class MaxesForm extends React.Component {
               id="ohpMax"
               type="number"
               name="ohpMax"
+              value={this.state.ohpMax}
               onChange={handleChange}
               className="input-maxes" />
           </div>

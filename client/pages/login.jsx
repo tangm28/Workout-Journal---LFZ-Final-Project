@@ -11,7 +11,7 @@ const styles = {
 };
 export default class Login extends React.Component {
   render() {
-    const { user, route, handleRegister, handleSignIn } = this.context;
+    const { user, route, handleRegister, handleLogIn } = this.context;
 
     if (user) return <Redirect to="" />;
 
@@ -30,7 +30,7 @@ export default class Login extends React.Component {
               <AuthForm
                 key={route.path}
                 action={route.path}
-                onSignIn={handleSignIn}
+                onLogIn={handleLogIn}
                 onRegister={handleRegister}
               />
             </div>

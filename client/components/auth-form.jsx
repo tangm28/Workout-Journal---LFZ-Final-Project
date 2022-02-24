@@ -49,7 +49,7 @@ export default class AuthForm extends React.Component {
           window.location.hash = 'create-profile';
           this.props.onRegister(result);
         } else if (result.user && result.token) {
-          this.props.onSignIn(result);
+          this.props.onLogIn(result);
         }
       });
   }
@@ -88,6 +88,7 @@ export default class AuthForm extends React.Component {
             id='username'
             type="text"
             name='username'
+            value={this.state.username}
             autoComplete={altUsernameText}
             onChange={handleChange}
             className="input-primary" />
@@ -102,6 +103,7 @@ export default class AuthForm extends React.Component {
             id='password'
             type="password"
             name='password'
+            value={this.state.password}
             autoComplete={altPasswordText}
             onChange={handleChange}
             className="input-primary" />
@@ -113,10 +115,10 @@ export default class AuthForm extends React.Component {
               Confirm Password:
             </label>
             <input
-              required
               id="passwordConfirmation"
               type="password"
               name="passwordConfirmation"
+              value={this.state.passwordConfirmation}
               onChange={handleChange}
               className="input-primary" />
           </div>

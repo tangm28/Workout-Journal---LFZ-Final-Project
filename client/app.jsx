@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Modal from 'react-modal';
 import AppContext from './lib/app-context';
 import decodeToken from './lib/decode-token';
@@ -26,7 +26,7 @@ export default class App extends React.Component {
     // const [isOpen, setIsOpen] = useState(false);
     this.handleFullModal = this.handleFullModal.bind(this);
     this.handleRegister = this.handleRegister.bind(this);
-    this.handleSignIn = this.handleSignIn.bind(this);
+    this.handleLogIn = this.handleLogIn.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
 
@@ -45,17 +45,12 @@ export default class App extends React.Component {
     this.setState({ user, isAuthorizing: false });
   }
 
-  handleClick(event) {
-    // this.setState({ isClicked: !this.state.isClicked });
-    console.log(event.target);
-  }
-
   handleRegister(result) {
     const { userId } = result;
     this.setState({ testUser: userId });
   }
 
-  handleSignIn(result) {
+  handleLogIn(result) {
     const { user, token } = result;
     window.localStorage.setItem('react-context-jwt', token);
     this.setState({ user });
@@ -87,9 +82,9 @@ export default class App extends React.Component {
   render() {
 
     if (this.state.isAuthorizing) return null;
-    const { user, route, testUser, setIsOpen, isOpen } = this.state;
-    const { handleRegister, handleSignIn, handleFullModal, handleClick } = this;
-    const contextValue = { user, route, testUser, handleRegister, handleSignIn, handleFullModal };
+    const { user, route, testUser, isOpen } = this.state;
+    const { handleRegister, handleLogIn, handleFullModal } = this;
+    const contextValue = { user, route, testUser, handleRegister, handleLogIn, handleFullModal };
     return (
     <AppContext.Provider value={contextValue}>
       <>
