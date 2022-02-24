@@ -172,6 +172,30 @@ app.post('/api/account/create-maxes', (req, res, next) => {
 
 });
 
+app.get('/api/account/get-maxes/:id', (req, res, next) => {
+  const userId = req.params.id;
+
+  if (!userId) {
+    throw new ClientError(400, 'all fields need to be completed');
+  }
+
+  const sql = `
+      select "benchMax", "squatMax", "deadliftMax", "ohpMax"
+        from "oneRepMaxes"
+       where "userId" = $1
+    order by "updatedAt"
+    limit 1
+      `;
+  const params = [userId];
+  db.query(sql, params)
+    .then(result => {
+      const [user] = result.rows;
+      res.status(201).json(user);
+    })
+    .catch(err => next(err));
+
+});
+
 app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`express server listening on port ${process.env.PORT}`);
