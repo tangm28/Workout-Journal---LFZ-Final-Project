@@ -79,6 +79,7 @@ export default class ProfileForm extends React.Component {
               id="firstName"
               type="text"
               name="firstName"
+              value={this.state.firstName}
               onChange={handleChange}
               className="input-secondary" />
           </div>
@@ -91,6 +92,7 @@ export default class ProfileForm extends React.Component {
               id="lastName"
               type="text"
               name="lastName"
+              value={this.state.lastName}
               onChange={handleChange}
               className="input-secondary" />
           </div>
@@ -114,6 +116,7 @@ export default class ProfileForm extends React.Component {
                   id="heightPrimary"
                   type="number"
                   name="heightPrimary"
+                  value={this.state.heightPrimary}
                   placeholder={heightPlaceholder[0]}
                   onChange={handleChange}
                   className="input-split35" />
@@ -122,6 +125,7 @@ export default class ProfileForm extends React.Component {
                   id="heightSecondary"
                   type="number"
                   name="heightSecondary"
+                  value={this.state.heightSecondary}
                   placeholder={heightPlaceholder[1]}
                   onChange={handleChange}
                   className="input-split35" />
@@ -142,6 +146,7 @@ export default class ProfileForm extends React.Component {
                 id="userWeight"
                 type="number"
                 name="userWeight"
+                value={this.state.userWeight}
                 placeholder={weightPlaceholder}
                 onChange={handleChange}
                 className="input-split70" />

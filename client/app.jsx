@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Modal from 'react-modal';
 import AppContext from './lib/app-context';
 import decodeToken from './lib/decode-token';
@@ -19,23 +19,17 @@ export default class App extends React.Component {
       user: null,
       isAuthorizing: true,
       route: parseRoute(window.location.hash),
-      testUser: null,
+      tempUser: null,
       isOpen: false,
       modal: false
     };
-    // const [isOpen, setIsOpen] = useState(false);
     this.handleFullModal = this.handleFullModal.bind(this);
     this.handleRegister = this.handleRegister.bind(this);
-    this.handleSignIn = this.handleSignIn.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.handleLogIn = this.handleLogIn.bind(this);
+    this.handleProfileCreation = this.handleProfileCreation.bind(this);
   }
 
   componentDidMount() {
-    /**
-     * Listen for hash change events on the window object
-     * Each time the window.location.hash changes, parse
-     * it with the parseRoute() function and update state
-     */
     window.addEventListener('hashchange', () => {
       const newRoute = parseRoute(window.location.hash);
       this.setState({ route: newRoute });
@@ -45,17 +39,16 @@ export default class App extends React.Component {
     this.setState({ user, isAuthorizing: false });
   }
 
-  handleClick(event) {
-    // this.setState({ isClicked: !this.state.isClicked });
-    console.log(event.target);
-  }
-
   handleRegister(result) {
     const { userId } = result;
-    this.setState({ testUser: userId });
+    this.setState({ tempUser: userId });
   }
 
-  handleSignIn(result) {
+  handleProfileCreation() {
+    this.setState({ tempUser: null });
+  }
+
+  handleLogIn(result) {
     const { user, token } = result;
     window.localStorage.setItem('react-context-jwt', token);
     this.setState({ user });
@@ -85,11 +78,10 @@ export default class App extends React.Component {
   }
 
   render() {
-
     if (this.state.isAuthorizing) return null;
-    const { user, route, testUser, setIsOpen, isOpen } = this.state;
-    const { handleRegister, handleSignIn, handleFullModal, handleClick } = this;
-    const contextValue = { user, route, testUser, handleRegister, handleSignIn, handleFullModal };
+    const { user, route, tempUser, isOpen } = this.state;
+    const { handleRegister, handleLogIn, handleFullModal, handleProfileCreation } = this;
+    const contextValue = { user, route, tempUser, handleRegister, handleLogIn, handleFullModal, handleProfileCreation };
     return (
     <AppContext.Provider value={contextValue}>
       <>

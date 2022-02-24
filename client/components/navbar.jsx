@@ -5,6 +5,13 @@ const styles = {
   navbar: {
     backgroundColor: '#1bc270',
     height: '50px'
+  },
+  barMenu: {
+    fontSize: '25px'
+  },
+  title: {
+    fontSize: '20px',
+    fontWeight: 'bold'
   }
 };
 
@@ -12,8 +19,12 @@ export default class Navbar extends React.Component {
   renderNavbar() {
     if (this.context.route.path === '') {
       return (
-        <>
-        </>
+        <div className=''>
+          <div className='row nav-container align-center'>
+            <i className="fas fa-bars" style={styles.barMenu}></i>
+            <span className='nav-center' style={styles.title}>Home</span>
+          </div>
+        </div>
       );
     }
   }
@@ -28,20 +39,3 @@ export default class Navbar extends React.Component {
 }
 
 Navbar.contextType = AppContext;
-
-// export default function Header(props) {
-//   return (
-//     <header className="mb-5">
-//       <nav className="navbar navbar-dark bg-dark shadow-sm">
-//         <div className="container">
-//           <div className="col px-0">
-//             {/* this anchor should go back to the catalog at '#' */}
-//             <a href="" className="navbar-brand">
-//               <i className="fa fa-dollar-sign" /> Wicked Sales
-//             </a>
-//           </div>
-//         </div>
-//       </nav>
-//     </header>
-//   );
-// }

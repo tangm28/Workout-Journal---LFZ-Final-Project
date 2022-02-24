@@ -72,9 +72,9 @@ app.post('/api/auth/log-in', (req, res, next) => {
       if (!user) {
         throw new ClientError(401, 'invalid login');
       }
-      const { userId, hashedPassword } = user;
+      const { userId } = user;
       return argon2
-        .verify(hashedPassword, password)
+        .verify(user.password, password)
         .then(isMatching => {
           if (!isMatching) {
             throw new ClientError(401, 'invalid login');
@@ -163,6 +163,30 @@ app.post('/api/account/create-maxes', (req, res, next) => {
     benchMax, squatMax, deadliftMax, ohpMax,
     maxesUnit, userId
   ];
+  db.query(sql, params)
+    .then(result => {
+      const [user] = result.rows;
+      res.status(201).json(user);
+    })
+    .catch(err => next(err));
+
+});
+
+app.get('/api/account/get-maxes/:id', (req, res, next) => {
+  const userId = req.params.id;
+
+  if (!userId) {
+    throw new ClientError(400, 'all fields need to be completed');
+  }
+
+  const sql = `
+      select "benchMax", "squatMax", "deadliftMax", "ohpMax"
+        from "oneRepMaxes"
+       where "userId" = $1
+    order by "updatedAt"
+    limit 1
+      `;
+  const params = [userId];
   db.query(sql, params)
     .then(result => {
       const [user] = result.rows;
