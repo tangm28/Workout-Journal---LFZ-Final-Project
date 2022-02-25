@@ -1,34 +1,95 @@
 import React from 'react';
 
+const styles = {
+  deleteIcon: {
+    color: 'white'
+  },
+  deleteIconContainer: {
+    height: '20px',
+    width: '20px',
+    borderRadius: '50%',
+    backgroundColor: 'red',
+    marginBottom: '5px'
+  },
+  input: {
+    backgroundColor: '#2f2f2f',
+    border: 'none',
+    color: 'white',
+    fontFamily: 'Quicksand, sans-serif',
+    paddingLeft: '10px',
+    lineHeight: '1.3rem',
+    width: '200px'
+  },
+  inputContainer: {
+    borderBottom: '#8f8f8f solid 1px',
+    padding: '10px 0 5px'
+  },
+  title: {
+    fontSize: '20px'
+  },
+  container: {
+    paddingTop: '10px'
+  },
+  clearButton: {
+    backgroundColor: '#8f8f8f'
+  }
+};
+
+// background - color: #2f2f2f;
+// border: #8f8f8f solid 1px;
+// border - radius: 5px;
+// color: white;
+// font - family: Quicksand, sans - serif;
+// font - size: 15px;
+// font - weight: 500;
+// height: 50px;
+// padding - left: 7px;
+
 export default class WorkoutForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: '',
-      lastName: '',
-      sex: 'male',
-      heightPrimary: 0,
-      heightSecondary: 0,
-      userHeightUnit: 'ft',
-      userWeight: 0,
-      userWeightUnit: 'lb',
-      goal: 'maintain',
-      activityLevel: 'noActivity',
+      tempWorkout: [
+        {
+          day1: 'Day 1',
+          exercise: [
+            { exerciseID: 1, name: '' }
+          ]
+        },
+        {
+          day2: 'Day 2',
+          exercise: [
+            { exerciseID: 1, name: '' }
+          ]
+        }
+      ],
+      day: ['Day 1', 'Day 2'],
+      workout: [
+        { exerciseID: 1, name: '' }
+      ],
+      nextExerciseID: 2,
       userId: this.props.userData
     };
-    this.handleChange = this.handleChange.bind(this);
-    this.onChange = this.onChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleClick(event) {
+    if (event.target.textContent === 'Add') {
+      const { workout } = this.state;
+      const updatedWorkout = workout.slice(0);
+      updatedWorkout.push({ exerciseID: this.state.nextExerciseID, name: '' });
+      this.setState({ workout: updatedWorkout, nextExerciseID: this.state.nextExerciseID + 1 });
+    }
   }
 
   handleChange(event) {
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
-  }
-
-  onChange(event) {
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
+    const { workout } = this.state;
+    const indexOfChange = workout.findIndex(x => x.exerciseID === Number(event.target.id));
+    const updatedWorkout = workout.slice(0);
+    updatedWorkout[indexOfChange].name = event.target.value;
+    this.setState({ workout: updatedWorkout });
   }
 
   handleSubmit(event) {
@@ -51,134 +112,131 @@ export default class WorkoutForm extends React.Component {
       });
   }
 
+  renderExerciseEntry(value, id) {
+    const uniqueId = id;
+    return (
+      <div className='row align-center justify-between' style={styles.inputContainer}>
+        <div>
+          <input
+            required
+            id={uniqueId}
+            type="text"
+            name={uniqueId}
+            value={value}
+            style={styles.input}
+            className='exercise-input'
+            onChange={this.handleChange}
+            placeholder='Input exercise here' />
+        </div>
+        <div>
+          <div className='row justify-center align-center' style={styles.deleteIconContainer}>
+            <i className="fas fa-minus" style={styles.deleteIcon}></i>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderExerciseDay(uniqueId, day) {
+    const renderExerciseEntry = this.state.workout.map(workout => {
+      return (
+        <div key={workout.exerciseID} onChange={this.handleChange}>
+          {this.renderExerciseEntry(workout.name, workout.exerciseID)}
+        </div>
+      );
+    });
+
+    return (
+      <div className='container-secondary m-top20'>
+        <div className="row justify-center align-center">
+          <input
+            autoFocus
+            id={uniqueId}
+            type="text"
+            name={uniqueId}
+            placeholder={day}
+            className="input-secondary text-center"
+            style={styles.title} />
+        </div>
+        <div className="m-top20">
+          <label htmlFor="Exercise" className="form-label">
+            Exercise:
+          </label>
+          {renderExerciseEntry}
+        </div>
+        <div className='row justify-center'>
+          <button type="button" className="btn-form-small" onClick={this.handleClick}>
+            Add
+          </button>
+          <button type="button" className="btn-form-small" style={styles.clearButton}>
+            Clear
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   render() {
     const {
       userHeightUnit, userWeightUnit
     } = this.state;
-    const { action } = this.props;
-    const { handleChange, handleSubmit } = this;
-    const heightPlaceholder = userHeightUnit === 'ft'
-      ? ['ft', 'in']
-      : ['m', 'cm'];
-    const weightPlaceholder = userWeightUnit === 'lb'
-      ? 'pounds'
-      : 'kilograms';
-    const submitButtonText = action === 'create-profile'
-      ? 'Next'
+    const { action, workoutInfo } = this.props;
+    const { handleChange, handleSubmit, handleClick } = this;
+    const submitButtonText = action === 'create-workout'
+      ? 'Finished'
       : 'Update';
+    // console.log(workoutInfo.numberOfWorkoutDays);
+    // if (workoutInfo.numberOfWorkoutDays > 2) {
+    //   con
+    // }
+    // const renderExerciseEntry = this.state.workout.map(workout => {
+    //   return (
+    //     <div key={workout.exerciseID} onChange={handleChange}>
+    //       {this.renderExerciseEntry(workout.name, workout.exerciseID)}
+    //     </div>
+    //   );
+    // });
+    const renderExerciseDay = this.state.day.map(day => {
+      const uniqueId = this.state.day.indexOf(day);
+      return (
+        <div key={uniqueId}>
+          {this.renderExerciseDay(uniqueId, day)}
+        </div>
+      );
+    });
+
+    console.log(this.state);
+
     return (
       <form className="" onSubmit={handleSubmit}>
-        <div className='container-secondary'>
-          <div className="row justify-between align-center">
-            <label htmlFor="firstName" className="form-label">
-              First Name:
-            </label>
+        {renderExerciseDay}
+        {/* {this.renderExerciseDay()} */}
+        {/* <div className='container-secondary'>
+          <div className="row justify-center align-center">
             <input
-              required
               autoFocus
-              id="firstName"
+              id="workout"
               type="text"
-              name="firstName"
-              value={this.state.firstName}
-              onChange={handleChange}
-              className="input-secondary" />
+              name="workout"
+              placeholder='Day 1'
+              className="input-secondary text-center"
+              style={styles.title} />
           </div>
-          <div className="row justify-between align-center m-top20">
-            <label htmlFor="lastName" className="form-label">
-              Last Name:
+          <div className="m-top20">
+            <label htmlFor="Exercise" className="form-label">
+              Exercise:
             </label>
-            <input
-              required
-              id="lastName"
-              type="text"
-              name="lastName"
-              value={this.state.lastName}
-              onChange={handleChange}
-              className="input-secondary" />
+            {renderExerciseEntry}
           </div>
-          <div className="row justify-between align-center m-top20">
-            <label htmlFor="sex" className="form-label">
-              Sex:
-            </label>
-            <select name="sex" id="sex" onChange={handleChange} className="input-secondary">
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
+          <div className='row justify-center'>
+            <button type="button" className="btn-form-small" onClick={handleClick}>
+              Add
+            </button>
+            <button type="button" className="btn-form-small" style={styles.clearButton}>
+              Clear
+            </button>
           </div>
-          <div className="row justify-between align-center m-top20">
-            <label htmlFor="height" className="form-label">
-              Height:
-            </label>
-            <div className='row justify-between input100'>
-              <div className='row justify-between input70'>
-                <input
-                  required
-                  id="heightPrimary"
-                  type="number"
-                  name="heightPrimary"
-                  value={this.state.heightPrimary}
-                  placeholder={heightPlaceholder[0]}
-                  onChange={handleChange}
-                  className="input-split35" />
-                <input
-                  required
-                  id="heightSecondary"
-                  type="number"
-                  name="heightSecondary"
-                  value={this.state.heightSecondary}
-                  placeholder={heightPlaceholder[1]}
-                  onChange={handleChange}
-                  className="input-split35" />
-              </div>
-              <select name="userHeightUnit" id="userHeightUnit" onChange={handleChange} className="unit-selector">
-                <option value="ft">ft</option>
-                <option value="m">m</option>
-              </select>
-            </div>
-          </div>
-          <div className="row justify-between align-center m-top20">
-            <label htmlFor="weight" className="form-label">
-              Weight:
-            </label>
-            <div className='row justify-between input100'>
-              <input
-                required
-                id="userWeight"
-                type="number"
-                name="userWeight"
-                value={this.state.userWeight}
-                placeholder={weightPlaceholder}
-                onChange={handleChange}
-                className="input-split70" />
-              <select name="userWeightUnit" id="userWeightUnit" onChange={handleChange} className="unit-selector">
-                <option value="lb">lb</option>
-                <option value="kg">kg</option>
-              </select>
-            </div>
-          </div>
-          <div className="row justify-between align-center m-top20">
-            <label htmlFor="goal" className="form-label">
-              Goal:
-            </label>
-            <select name="goal" id="goal" onChange={handleChange} className="input-secondary">
-              <option value="maintainWeight">Maintain Weight</option>
-              <option value="loseWeight">Lose Weight</option>
-              <option value="gainWeight">Gain Weight</option>
-            </select>
-          </div>
-          <div className="row justify-between align-center m-top20">
-            <label htmlFor="activityLevel" className="form-label">
-              Activity Level:
-            </label>
-            <select name="activityLevel" id="activityLevel" onChange={handleChange} className="input-secondary">
-              <option value="noActivity">Little or no activity</option>
-              <option value="lightActivity">Lightly active</option>
-              <option value="moderateActivity">Moderately active</option>
-              <option value="veryActive">Very active</option>
-              <option value="extremelyActive">Extremely active</option>
-            </select>
-          </div>
-        </div>
+        </div> */}
         <div className='row justify-center'>
           <button type="submit" className="btn-form">
             {submitButtonText}

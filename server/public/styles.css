@@ -213,6 +213,17 @@ h5 {
   margin-top: 20px;
 }
 
+.btn-form-small {
+  background-color: #1bc270;
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-family: Quicksand, sans-serif;
+  font-weight: bold;
+  padding: 10px 25px;
+  margin: 20px 15px 0;
+}
+
 .btn-modal {
   background-color: #1bc270;
   border: none;
@@ -232,6 +243,11 @@ a:focus {
   outline: none !important;
   border-color: 1px solid #1bc270 !important;
   box-shadow: 0 0 2px 3px #1bc270 !important;
+}
+
+.exercise-input:focus {
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .alt-to-login {
