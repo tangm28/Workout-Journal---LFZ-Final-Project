@@ -1,4 +1,5 @@
 import React from 'react';
+import AppContext from '../lib/app-context';
 
 export default class MaxesForm extends React.Component {
   constructor(props) {
@@ -14,6 +15,26 @@ export default class MaxesForm extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    const { action } = this.props;
+    if (action === 'update-maxes') {
+      const { userId } = this.props.userData;
+      fetch(`/api/account/get-maxes/${userId}`)
+        .then(res => res.json())
+        .then(result => {
+          const { benchMax, squatMax, deadliftMax, ohpMax, maxesUnit } = result;
+          this.setState({
+            benchMax: benchMax,
+            squatMax: squatMax,
+            deadliftMax: deadliftMax,
+            ohpMax: ohpMax,
+            maxesUnit: maxesUnit,
+            userId: userId
+          });
+        });
+    }
   }
 
   handleChange(event) {
@@ -40,12 +61,15 @@ export default class MaxesForm extends React.Component {
       },
       body: JSON.stringify(this.state)
     };
-    fetch(`/api/account/${action}`, req)
+    fetch('/api/account/create-maxes', req)
       .then(res => res.json())
       .then(result => {
         if (action === 'create-maxes') {
           window.location.hash = 'log-in';
           this.props.onRegister(result);
+        } else if (action === 'update-maxes') {
+          window.location.hash = '#';
+          this.props.onUpdate(result);
         }
 
       });
@@ -139,3 +163,5 @@ export default class MaxesForm extends React.Component {
     );
   }
 }
+
+MaxesForm.contextType = AppContext;

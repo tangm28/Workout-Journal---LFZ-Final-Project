@@ -16,15 +16,26 @@ const styles = {
 export default class TrainingMaxes extends React.Component {
 
   render() {
-    const { route, tempUser, handleFullModal, handleProfileCreation } = this.context;
-    if (!tempUser) return <Redirect to="log-in" />;
+    const { user, route, tempUser, handleFullModal, handleProfileCreation, handleMaxUpdate } = this.context;
+    if (!tempUser && !user) return <Redirect to="log-in" />;
+    const altUser = !tempUser
+      ? user
+      : tempUser;
+
+    const titleMessage = route.path === 'create-maxes'
+      ? "Let's Get Started"
+      : 'Current Training Maxes';
+
+    const maxesDescription = route.path === 'create-maxes'
+      ? ''
+      : 'hidden';
 
     return (
       <div className='widget-container'>
         <header className='text-center' style={styles.title}>
-          Let&apos;s Get Started
+          {titleMessage}
         </header>
-        <p className='maxes-text'>
+        <p className={`maxes-text ${maxesDescription}`}>
           What is your 1 rep max for the following exercises?
           (If you&apos;re not sure, that&apos;s okay.
           Use this <span onClick={handleFullModal} style={styles.openCalc}>
@@ -38,8 +49,9 @@ export default class TrainingMaxes extends React.Component {
                 key={route.path}
                 action={route.path}
                 openModal={handleFullModal}
-                userData={tempUser}
+                userData={altUser}
                 onRegister={handleProfileCreation}
+                onUpdate={handleMaxUpdate}
               />
             </div>
           </div>
