@@ -51,23 +51,27 @@ export default class WorkoutForm extends React.Component {
     this.state = {
       tempWorkout: [
         {
-          day1: 'Day 1',
+          day: 1,
+          name: 'Day 1',
           exercise: [
-            { exerciseID: 1, name: '' }
-          ]
+            { exerciseId: 10001, name: '' }
+          ],
+          nextExerciseId: 10002
         },
         {
-          day2: 'Day 2',
+          day: 2,
+          name: 'Day 2',
           exercise: [
-            { exerciseID: 1, name: '' }
-          ]
+            { exerciseId: 20001, name: '' }
+          ],
+          nextExerciseId: 20002
         }
       ],
       day: ['Day 1', 'Day 2'],
       workout: [
-        { exerciseID: 1, name: '' }
+        { exerciseId: 1, name: '' }
       ],
-      nextExerciseID: 2,
+      // nextExerciseId: 2,
       userId: this.props.userData
     };
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -77,19 +81,41 @@ export default class WorkoutForm extends React.Component {
 
   handleClick(event) {
     if (event.target.textContent === 'Add') {
-      const { workout } = this.state;
-      const updatedWorkout = workout.slice(0);
-      updatedWorkout.push({ exerciseID: this.state.nextExerciseID, name: '' });
-      this.setState({ workout: updatedWorkout, nextExerciseID: this.state.nextExerciseID + 1 });
+      console.log(event.target.parentElement.parentElement.id);
+      const dayOfChange = Number(event.target.parentElement.parentElement.id[3]) - 1;
+      const { tempWorkout } = this.state;
+      // console.log(tempWorkout[dayOfChange].nextExerciseId);
+      const nextId = tempWorkout[dayOfChange].nextExerciseId;
+      const updatedWorkout = tempWorkout.slice(0);
+      console.log(nextId);
+      // console.log(updatedWorkout[dayOfChange].exercise);
+      // const newExercise = {}
+      updatedWorkout[dayOfChange].exercise.push({ exerciseId: nextId, name: '' });
+      updatedWorkout[dayOfChange].nextExerciseId++;
+      console.log(updatedWorkout);
+      // updatedWorkout.push({ exerciseId: this.state.nextExerciseId, name: '' });
+      this.setState({ tempWorkout: updatedWorkout });
     }
   }
 
   handleChange(event) {
-    const { workout } = this.state;
-    const indexOfChange = workout.findIndex(x => x.exerciseID === Number(event.target.id));
-    const updatedWorkout = workout.slice(0);
-    updatedWorkout[indexOfChange].name = event.target.value;
-    this.setState({ workout: updatedWorkout });
+    const { tempWorkout } = this.state;
+    // console.log(event.target.value);
+    const dayOfChange = Number(event.target.id[0]) - 1;
+    let indexOfChange = -1;
+    for (let i = 0; i < tempWorkout.length; i++) {
+      if (indexOfChange < 0) {
+        indexOfChange = tempWorkout[i].exercise.findIndex(x => x.exerciseId === Number(event.target.id));
+      }
+    }
+
+    // const { workout } = this.state;
+    // const indexOfChange = workout.findIndex(x => x.exerciseId === Number(event.target.id));
+    const updatedWorkout = tempWorkout.slice(0);
+    // console.log(updatedWorkout[dayOfChange].exercise[indexOfChange].name);
+    updatedWorkout[dayOfChange].exercise[indexOfChange].name = event.target.value;
+    // updatedWorkout[indexOfChange].name = event.target.value;
+    this.setState({ tempWorkout: updatedWorkout });
   }
 
   handleSubmit(event) {
@@ -112,16 +138,16 @@ export default class WorkoutForm extends React.Component {
       });
   }
 
-  renderExerciseEntry(value, id) {
-    const uniqueId = id;
+  renderExerciseEntry(value, id, day) {
     return (
+      // console.log(id, day)
       <div className='row align-center justify-between' style={styles.inputContainer}>
         <div>
           <input
             required
-            id={uniqueId}
+            id={id}
             type="text"
-            name={uniqueId}
+            name={id}
             value={value}
             style={styles.input}
             className='exercise-input'
@@ -138,23 +164,55 @@ export default class WorkoutForm extends React.Component {
   }
 
   renderExerciseDay(uniqueId, day) {
-    const renderExerciseEntry = this.state.workout.map(workout => {
-      return (
-        <div key={workout.exerciseID} onChange={this.handleChange}>
-          {this.renderExerciseEntry(workout.name, workout.exerciseID)}
-        </div>
-      );
-    });
+    // console.log(day.day);
+    const renderExerciseEntry = this.state.tempWorkout.map(workout => {
+      // console.log(workout.exercise.map(exercises => {
+      //   console.log(exercises);
+      // }));
+      return workout.exercise.map(exercises => {
+        // console.log(Number((exercises.exerciseId + '')[0]));
+        // console.log(workout.day);
 
+        if (workout.day === day.day) {
+          // console.log(exercises.exerciseId);
+          // console.log(workout.day);
+          return (
+            <div key={exercises.exerciseId} onChange={this.handleChange}>
+              {this.renderExerciseEntry(exercises.name, exercises.exerciseId, workout.day)}
+            </div>
+          );
+        }
+
+        // console.log(exercises);
+      //   {
+      //           // <div key={workout.exercise.exerciseId} onChange={this.handleChange}>
+      // //   {this.renderExerciseEntry(workout.exercise.name, workout.exercise.exerciseId)}
+      // // </div>
+      //   }
+      })
+      // <div key={workout.exercise.exerciseId} onChange={this.handleChange}>
+      //   {this.renderExerciseEntry(workout.exercise.name, workout.exercise.exerciseId)}
+      // </div>
+      ;
+    });
+    // const renderExerciseEntry = this.state.workout.map(workout => {
+    //   return (
+    //     <div key={workout.exerciseId} onChange={this.handleChange}>
+    //       {this.renderExerciseEntry(workout.name, workout.exerciseId)}
+    //     </div>
+    //   );
+    // });
+    // console.log('day' + day.day);
+    const dayId = 'day' + day.day;
     return (
-      <div className='container-secondary m-top20'>
+      <div id={dayId} className='container-secondary m-top20'>
         <div className="row justify-center align-center">
           <input
             autoFocus
             id={uniqueId}
             type="text"
             name={uniqueId}
-            placeholder={day}
+            placeholder={day.name}
             className="input-secondary text-center"
             style={styles.title} />
         </div>
@@ -191,13 +249,21 @@ export default class WorkoutForm extends React.Component {
     // }
     // const renderExerciseEntry = this.state.workout.map(workout => {
     //   return (
-    //     <div key={workout.exerciseID} onChange={handleChange}>
-    //       {this.renderExerciseEntry(workout.name, workout.exerciseID)}
+    //     <div key={workout.exerciseId} onChange={handleChange}>
+    //       {this.renderExerciseEntry(workout.name, workout.exerciseId)}
     //     </div>
     //   );
     // });
-    const renderExerciseDay = this.state.day.map(day => {
-      const uniqueId = this.state.day.indexOf(day);
+    // const renderExerciseDay = this.state.day.map(day => {
+    //   const uniqueId = this.state.day.indexOf(day);
+    //   return (
+    //     <div key={uniqueId}>
+    //       {this.renderExerciseDay(uniqueId, day)}
+    //     </div>
+    //   );
+    // });
+    const renderExerciseDay = this.state.tempWorkout.map(day => {
+      const uniqueId = this.state.tempWorkout.indexOf(day);
       return (
         <div key={uniqueId}>
           {this.renderExerciseDay(uniqueId, day)}
