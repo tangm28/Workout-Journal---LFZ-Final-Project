@@ -2,6 +2,7 @@ import React from 'react';
 import Redirect from '../components/redirect';
 import AppContext from '../lib/app-context';
 import MaxesWidget from '../components/maxes-widget';
+import WorkoutWidget from '../components/workout-widget';
 
 export default class Home extends React.Component {
   render() {
@@ -10,6 +11,7 @@ export default class Home extends React.Component {
     return (
       <div>
         <MaxesWidget />
+        <WorkoutWidget />
       </div>
     );
   }
