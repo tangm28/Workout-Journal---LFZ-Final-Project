@@ -141,7 +141,6 @@ app.post('/api/account/create-maxes', (req, res, next) => {
     benchMax, squatMax, deadliftMax, ohpMax,
     maxesUnit, userId
   } = req.body;
-
   if (!benchMax || !squatMax || !deadliftMax || !ohpMax ||
     !maxesUnit || !userId) {
     throw new ClientError(400, 'all fields need to be completed');
@@ -180,10 +179,10 @@ app.get('/api/account/get-maxes/:id', (req, res, next) => {
   }
 
   const sql = `
-      select "benchMax", "squatMax", "deadliftMax", "ohpMax"
+      select "benchMax", "squatMax", "deadliftMax", "ohpMax", "maxesUnit"
         from "oneRepMaxes"
        where "userId" = $1
-    order by "updatedAt"
+    order by "updatedAt" desc
     limit 1
       `;
   const params = [userId];

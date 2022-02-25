@@ -21,12 +21,14 @@ export default class App extends React.Component {
       route: parseRoute(window.location.hash),
       tempUser: null,
       isOpen: false,
-      modal: false
+      modal: false,
+      maxes: {}
     };
     this.handleFullModal = this.handleFullModal.bind(this);
     this.handleRegister = this.handleRegister.bind(this);
     this.handleLogIn = this.handleLogIn.bind(this);
     this.handleProfileCreation = this.handleProfileCreation.bind(this);
+    this.handleMaxUpdate = this.handleMaxUpdate.bind(this);
   }
 
   componentDidMount() {
@@ -37,6 +39,35 @@ export default class App extends React.Component {
     const token = window.localStorage.getItem('react-context-jwt');
     const user = token ? decodeToken(token) : null;
     this.setState({ user, isAuthorizing: false });
+    if (user !== null) {
+      fetch(`/api/account/get-maxes/${user.userId}`)
+        .then(res => res.json())
+        .then(result => {
+          const { benchMax, squatMax, deadliftMax, ohpMax, maxesUnit } = result;
+          this.setState({
+            maxes: {
+              currentBench: benchMax,
+              currentSquat: squatMax,
+              currentDeadlift: deadliftMax,
+              currentOhp: ohpMax,
+              currentUnit: maxesUnit
+            }
+          });
+        });
+    }
+  }
+
+  handleMaxUpdate(result) {
+    const { maxesUnit, benchMax, squatMax, deadliftMax, ohpMax } = result;
+    this.setState({
+      maxes: {
+        currentBench: benchMax,
+        currentSquat: squatMax,
+        currentDeadlift: deadliftMax,
+        currentOhp: ohpMax,
+        currentUnit: maxesUnit
+      }
+    });
   }
 
   handleRegister(result) {
@@ -79,9 +110,19 @@ export default class App extends React.Component {
 
   render() {
     if (this.state.isAuthorizing) return null;
-    const { user, route, tempUser, isOpen } = this.state;
-    const { handleRegister, handleLogIn, handleFullModal, handleProfileCreation } = this;
-    const contextValue = { user, route, tempUser, handleRegister, handleLogIn, handleFullModal, handleProfileCreation };
+    const { user, route, tempUser, isOpen, maxes } = this.state;
+    const { handleRegister, handleLogIn, handleFullModal, handleProfileCreation, handleMaxUpdate } = this;
+    const contextValue = {
+      user,
+      route,
+      tempUser,
+      handleRegister,
+      handleLogIn,
+      handleFullModal,
+      handleProfileCreation,
+      maxes,
+      handleMaxUpdate
+    };
     return (
     <AppContext.Provider value={contextValue}>
       <>
