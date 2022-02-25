@@ -6,6 +6,7 @@ import Home from './pages/home';
 import Login from './pages/login';
 import Profile from './pages/profile';
 import TrainingMaxes from './pages/trainingMaxes';
+import MyWorkout from './pages/workout';
 import NavBar from './components/navbar';
 import Footer from './components/footer';
 import MaxesCalculator from './components/maxes-calculator';
@@ -103,6 +104,9 @@ export default class App extends React.Component {
     }
     if (path === 'update-maxes' || path === 'create-maxes') {
       return <TrainingMaxes />;
+    }
+    if (path === 'workout' || path === 'create-workout') {
+      return <MyWorkout />;
     }
 
     // return <NotFound />;

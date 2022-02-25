@@ -4,7 +4,8 @@ import AppContext from '../lib/app-context';
 const styles = {
   title: {
     fontSize: '20px',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    marginBottom: '20px'
   },
   card: {
     backgroundColor: '#2F2F2F',
@@ -14,6 +15,9 @@ const styles = {
   cardContent: {
     fontSize: '30px',
     fontWeight: 'bold'
+  },
+  container: {
+    paddingTop: '20px'
   }
 };
 
@@ -34,7 +38,7 @@ export default class MaxesWidget extends React.Component {
     const { handleClick } = this;
     const { maxes } = this.context;
     return (
-      <div className='widget-container-secondary'>
+      <div className='widget-container-secondary' style={styles.container}>
         <div >
           <div onClick={handleClick}>
             <header className='text-center' style={styles.title}>

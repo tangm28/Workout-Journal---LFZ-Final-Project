@@ -67,7 +67,8 @@
 
 .container,
 .widget-container,
-.modal {
+.modal,
+.widget-button {
   width: 100%;
 }
 
@@ -107,7 +108,7 @@ header {
 
   .input-primary,
   .input-secondary,
-  .input100 {
+  .input100, {
     width: 100%;
   }
 
@@ -141,7 +142,8 @@ header {
   .container,
   .widget-container,
   .widget-container-secondary,
-  .nav-container {
+  .nav-container,
+  .widget-button {
     max-width: calc(375px * 0.9333);
   }
 
