@@ -71,7 +71,7 @@ CREATE TABLE "exerciseSets" (
 
 CREATE TABLE "workoutCreateYourOwn" (
 	"workoutId" serial NOT NULL,
-	"name" TEXT NOT NULL,
+	"name" TEXT NOT NULL DEFAULT '',
 	"dateFinished" TIMESTAMP default null,
 	"templateId" integer NOT NULL,
 	CONSTRAINT "workoutCreateYourOwn_pk" PRIMARY KEY ("workoutId")

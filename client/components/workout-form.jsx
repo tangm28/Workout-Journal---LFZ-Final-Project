@@ -89,6 +89,7 @@ export default class WorkoutForm extends React.Component {
     this.addExercise = this.addExercise.bind(this);
     this.deleteExercise = this.deleteExercise.bind(this);
     this.clearExercise = this.clearExercise.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   deleteDay(event) {
@@ -280,10 +281,77 @@ export default class WorkoutForm extends React.Component {
     );
   }
 
+  handleSubmit(event) {
+    event.preventDefault();
+    const { user } = this.context;
+    const { workout, workoutTemplate } = this.state;
+    const { action } = this.props;
+    const reqBody = {
+      template: workoutTemplate,
+      numOfDays: workout.length,
+      userId: user.userId
+    };
+    if (workout.length > 0) {
+      const req = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(reqBody)
+      };
+      fetch('/api/workout/create-workout', req)
+        .then(res => res.json())
+        .then(result => {
+          if (workoutTemplate === 'createOwn') {
+            for (let i = 0; i < workout.length; i++) {
+              const name = workout[i].name === ''
+                ? 'empty'
+                : workout[i].name;
+              const reqBodyDay = {
+                workoutName: name,
+                templateId: result.templateId
+              };
+              const reqDay = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(reqBodyDay)
+              };
+              fetch('/api/workout/create-your-own', reqDay)
+                .then(res => res.json())
+                .then(result => {
+                  for (let j = 0; j < workout[i].exercise.length; j++) {
+                    const reqBodyExercise = {
+                      exerciseName: workout[i].exercise[j].name,
+                      workoutId: result.workoutId
+                    };
+                    const reqExercise = {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify(reqBodyExercise)
+                    };
+                    fetch('/api/workout/create-exercise', reqExercise)
+                      .then(res => res.json())
+                      .then(result => {
+                        if (action === 'create-workout') {
+                          window.location.hash = 'workout-days';
+                        }
+                      });
+                  }
+                });
+            }
+          }
+        });
+    }
+  }
+
   render() {
     const { action } = this.props;
     const { workoutTemplate, workout } = this.state;
-    const { selectTemplate, createDay, renderDays } = this;
+    const { selectTemplate, createDay, renderDays, handleSubmit } = this;
 
     const submitButtonText = action === 'create-workout'
       ? 'Finished'
@@ -305,10 +373,10 @@ export default class WorkoutForm extends React.Component {
 
     return (
       <div>
-        <form action="">
+        <form action="" onSubmit={handleSubmit}>
           <div style={styles.container}>
             <div className='row justify-between align-center'>
-              <label htmlFor="workoutTemplate" className="form-label">
+              <label className="form-label">
                 Template:
               </label>
               <select name="workoutTemplate" id="workoutTemplate" value={workoutTemplate} onChange={selectTemplate} style={styles.dropdown}>

@@ -82,8 +82,22 @@ export default class App extends React.Component {
 
   handleLogIn(result) {
     const { user, token } = result;
+    fetch(`/api/account/get-maxes/${user.userId}`)
+      .then(res => res.json())
+      .then(result => {
+        const { benchMax, squatMax, deadliftMax, ohpMax, maxesUnit } = result;
+        this.setState({
+          user: user,
+          maxes: {
+            currentBench: benchMax,
+            currentSquat: squatMax,
+            currentDeadlift: deadliftMax,
+            currentOhp: ohpMax,
+            currentUnit: maxesUnit
+          }
+        });
+      });
     window.localStorage.setItem('react-context-jwt', token);
-    this.setState({ user });
   }
 
   handleFullModal() {
@@ -105,7 +119,8 @@ export default class App extends React.Component {
     if (path === 'update-maxes' || path === 'create-maxes') {
       return <TrainingMaxes />;
     }
-    if (path === 'workout' || path === 'create-workout') {
+    if (path === 'workout' || path === 'workout-days' ||
+      path === 'create-workout' || path === 'update-workout') {
       return <MyWorkout />;
     }
 

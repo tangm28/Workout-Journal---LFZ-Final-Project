@@ -38,7 +38,7 @@ export default class MaxesForm extends React.Component {
   }
 
   handleChange(event) {
-    console.log(event.target.textContent);
+    // console.log(event.target.textContent);
     const { name, value } = event.target;
     this.setState({ [name]: value });
   }
