@@ -66,6 +66,12 @@ h5 {
   padding: 25px 10px 20px;
 }
 
+.container-tertiary {
+  background-color: #2f2f2f;
+  border-radius: 10px;
+  padding: 10px 10px 20px;
+}
+
 .text-muted {
   color: #2cc47a;
 }

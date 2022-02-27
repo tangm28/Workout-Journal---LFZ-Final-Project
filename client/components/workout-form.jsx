@@ -76,33 +76,45 @@ export default class WorkoutForm extends React.Component {
     this.state = {
       workoutTemplate: 'createOwn',
       workout: [
-        {
-          day: 1,
-          name: '',
-          exercise: [
-            { exerciseId: 10001, name: '' }
-          ],
-          nextExerciseId: 10002
-        },
-        {
-          day: 2,
-          name: '',
-          exercise: [
-            { exerciseId: 20001, name: '' }
-          ],
-          nextExerciseId: 20002
-        }
+
       ]
     };
     this.createDay = this.createDay.bind(this);
     this.selectTemplate = this.selectTemplate.bind(this);
     this.renderDays = this.renderDays.bind(this);
     this.renderExerciseEntry = this.renderExerciseEntry.bind(this);
+    this.deleteDay = this.deleteDay.bind(this);
     this.updateTitle = this.updateTitle.bind(this);
     this.updateExercises = this.updateExercises.bind(this);
     this.addExercise = this.addExercise.bind(this);
     this.deleteExercise = this.deleteExercise.bind(this);
     this.clearExercise = this.clearExercise.bind(this);
+  }
+
+  deleteDay(event) {
+    const { workout } = this.state;
+    if (workout.length > 1) {
+      const dayOfChange = Number(event.target.parentElement.parentElement.id[3] - 1);
+      let tempWorkout = workout.slice(0);
+      const updateWorkout = tempWorkout.splice(0, dayOfChange);
+      const changeWorkout = tempWorkout.splice(1);
+      for (let i = 0; i < changeWorkout.length; i++) {
+        for (let j = 0; j < changeWorkout[i].exercise.length; j++) {
+          changeWorkout[i].exercise[j] = {
+            exerciseId: changeWorkout[i].exercise[j].exerciseId - 10000,
+            name: changeWorkout[i].exercise[j].name
+          };
+        }
+        changeWorkout[i] = {
+          day: changeWorkout[i].day - 1,
+          exercise: changeWorkout[i].exercise,
+          name: changeWorkout[i].name,
+          nextExerciseId: changeWorkout[i].nextExerciseId - 10000
+        };
+      }
+      tempWorkout = updateWorkout.concat(changeWorkout);
+      this.setState({ workout: tempWorkout });
+    }
   }
 
   updateTitle(event) {
@@ -209,8 +221,11 @@ export default class WorkoutForm extends React.Component {
     const tempPlaceholder = 'Day ' + day.day;
     const uniqueId = day.day;
     return (
-    <div id={dayId} className='container-secondary m-top20'>
-      <div className="row justify-center align-center">
+    <div id={dayId} className='container-tertiary m-top20'>
+      <div className='row justify-end'>
+        <i className="fas fa-times" onClick={this.deleteDay}></i>
+      </div>
+      <div className="row justify-center align-center" style={styles.container}>
         <input
           autoFocus
           id={uniqueId}
@@ -266,7 +281,6 @@ export default class WorkoutForm extends React.Component {
   }
 
   render() {
-    const { route } = this.context;
     const { action } = this.props;
     const { workoutTemplate, workout } = this.state;
     const { selectTemplate, createDay, renderDays } = this;
@@ -289,7 +303,6 @@ export default class WorkoutForm extends React.Component {
       );
     });
 
-    console.log(this.state.workout);
     return (
       <div>
         <form action="">
