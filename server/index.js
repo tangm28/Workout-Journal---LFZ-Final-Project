@@ -270,6 +270,35 @@ app.post('/api/workout/create-exercise', (req, res, next) => {
 
 });
 
+app.get('/api/workout/get-workout/:id', (req, res, next) => {
+  const userId = req.params.id;
+
+  if (!userId) {
+    throw new ClientError(400, 'all fields need to be completed');
+  }
+
+  const sql = `
+      select "userId", "templateId", "workoutId", "exerciseId",
+             "template", "numOfDays",
+             "cyo"."name" as "workoutDayName", "e"."name" as "exerciseName",
+             "dateFinished"
+        from "workoutSetups"
+        join "workoutCreateYourOwn" as "cyo" using ("templateId")
+         join "exercises" as "e" using ("workoutId")
+        where "createdAt" =
+              (SELECT max("createdAt")
+                 from "workoutSetups")
+              and "userId" = $1
+      `;
+  const params = [userId];
+  db.query(sql, params)
+    .then(result => {
+      res.status(201).json(result.rows);
+    })
+    .catch(err => next(err));
+
+});
+
 app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`express server listening on port ${process.env.PORT}`);

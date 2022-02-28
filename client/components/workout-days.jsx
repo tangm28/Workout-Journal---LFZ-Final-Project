@@ -2,7 +2,10 @@ import React from 'react';
 import AppContext from '../lib/app-context';
 
 const styles = {
-
+  dayContainer: {
+    fontSize: '15px',
+    fontWeight: 'bold'
+  }
 };
 
 export default class WorkoutDay extends React.Component {
@@ -18,36 +21,30 @@ export default class WorkoutDay extends React.Component {
   }
 
   render() {
-    // const { action } = this.props;
-    // const { workoutTemplate, workout } = this.state;
-    // const { selectTemplate, createDay, renderDays } = this;
+    const { workout } = this.context;
+    console.log(workout);
+    const renderDays = workout.map((day, index) => {
 
-    // const submitButtonText = action === 'create-workout'
-    //   ? 'Finished'
-    //   : 'Update';
-
-    // const templateOptions = templates.map(template => {
-    //   return (
-    //     <option key={template.value} value={template.value}>{template.label}</option>)
-    //   ;
-    // });
-
-    // const workoutDays = workout.map(day => {
-    //   return (
-    //     <div key={day.day}>
-    //       {renderDays(day)}
-    //     </div>
-    //   );
-    // });
+      const dayName = day.workoutName === ''
+        ? 'Day ' + (index + 1)
+        : day.workoutName;
+      console.log(dayName);
+      return (
+        <div className='container-day m-top20' key={day.workoutName}>
+          <div >
+            <span style={styles.dayContainer}>{dayName}</span>
+          </div>
+        </div>
+      );
+    });
 
     return (
-      <div className='widget-container'>
-        <header className='text-center' style={styles.title}>
-         <h1>helllooo</h1>
-        </header>
-        <div>
-          <div >
-          </div>
+      <div >
+        {renderDays}
+        <div className='row justify-center'>
+          <button type="button" className="btn-form">
+            Week Finished
+          </button>
         </div>
       </div>
     );

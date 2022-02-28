@@ -338,6 +338,7 @@ export default class WorkoutForm extends React.Component {
                       .then(result => {
                         if (action === 'create-workout') {
                           window.location.hash = 'workout-days';
+                          this.props.onCreation();
                         }
                       });
                   }

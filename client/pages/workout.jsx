@@ -20,7 +20,7 @@ export default class MyWorkout extends React.Component {
   }
 
   renderPage() {
-    const { user, route, tempUser } = this.context;
+    const { user, route, tempUser, handleCreation } = this.context;
     const altUser = !tempUser
       ? user
       : tempUser;
@@ -28,7 +28,8 @@ export default class MyWorkout extends React.Component {
       return <WorkoutForm
         key={route.path}
         action={route.path}
-        userData={altUser} />;
+        userData={altUser}
+        onCreation={handleCreation} />;
     }
     if (route.path === 'workout-days') {
       return <WorkoutDays
@@ -47,8 +48,12 @@ export default class MyWorkout extends React.Component {
     //   ? user
     //   : tempUser;
 
-    const titleMessage = route.path === 'create-workout'
+    let titleMessage = route.path === 'create-workout'
       ? 'Create Workout'
+      : 'Edit Workout';
+
+    titleMessage = route.path === 'workout-days'
+      ? 'My Workout'
       : 'Edit Workout';
 
     return (
