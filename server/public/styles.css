@@ -251,7 +251,8 @@ h5 {
 input:focus,
 select:focus,
 .btn-form:focus,
-a:focus {
+a:focus,
+.btn-form-small:focus {
   outline: none !important;
   border-color: 1px solid #1bc270 !important;
   box-shadow: 0 0 2px 3px #1bc270 !important;
