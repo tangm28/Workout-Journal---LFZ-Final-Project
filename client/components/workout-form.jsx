@@ -372,6 +372,14 @@ export default class WorkoutForm extends React.Component {
       );
     });
 
+    const canAddDays = workout.length < 7
+      ? <div>
+        <div className='row justify-center align-center' style={styles.addIconContainer} onClick={createDay}>
+          <i className="fas fa-plus"></i>
+        </div>
+      </div>
+      : <div></div>;
+
     return (
       <div>
         <form action="" onSubmit={handleSubmit}>
@@ -389,9 +397,7 @@ export default class WorkoutForm extends React.Component {
             </div>
           </div>
           <div className='row justify-center'>
-            <div className='row justify-center align-center' style={styles.addIconContainer} onClick={createDay}>
-              <i className="fas fa-plus"></i>
-            </div>
+            {canAddDays}
           </div>
           <div className='row justify-center'>
             <button type="submit" className="btn-form">
