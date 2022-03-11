@@ -57,38 +57,10 @@ export default class App extends React.Component {
             }
           });
         });
-      fetch(`/api/workout/get-workout/${user.userId}`)
+      fetch(`/api/workout/get-workout-test/${user.userId}`)
         .then(res => res.json())
         .then(result => {
-          const tempWorkout = [];
-          let day = {};
-          let exercise = [];
-          let dayName = '';
-          for (let i = 0; i < result.length; i++) {
-            if (dayName !== result[i].workoutDayName) {
-              if (exercise.length > 0) {
-                day = {
-                  workoutName: dayName,
-                  exercise: exercise
-                };
-                tempWorkout.push(day);
-                day = {};
-                exercise = [];
-              }
-              dayName = result[i].workoutDayName;
-            }
-            if (dayName === result[i].workoutDayName) {
-              exercise.push(result[i]);
-            }
-            if (i === result.length - 1) {
-              day = {
-                workoutName: dayName,
-                exercise: exercise
-              };
-              tempWorkout.push(day);
-            }
-          }
-          this.setState({ workout: tempWorkout });
+          this.setState({ workout: result });
         });
     }
   }
@@ -142,38 +114,10 @@ export default class App extends React.Component {
 
   handleCreation() {
     const { user } = this.state;
-    fetch(`/api/workout/get-workout/${user.userId}`)
+    fetch(`/api/workout/get-workout-test/${user.userId}`)
       .then(res => res.json())
       .then(result => {
-        const tempWorkout = [];
-        let day = {};
-        let exercise = [];
-        let dayName = '';
-        for (let i = 0; i < result.length; i++) {
-          if (dayName !== result[i].workoutDayName) {
-            if (exercise.length > 0) {
-              day = {
-                workoutName: dayName,
-                exercise: exercise
-              };
-              tempWorkout.push(day);
-              day = {};
-              exercise = [];
-            }
-            dayName = result[i].workoutDayName;
-          }
-          if (dayName === result[i].workoutDayName) {
-            exercise.push(result[i]);
-          }
-          if (i === result.length - 1) {
-            day = {
-              workoutName: dayName,
-              exercise: exercise
-            };
-            tempWorkout.push(day);
-          }
-        }
-        this.setState({ workout: tempWorkout });
+        this.setState({ workout: result });
       });
   }
 

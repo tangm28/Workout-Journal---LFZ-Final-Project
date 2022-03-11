@@ -299,6 +299,74 @@ app.get('/api/workout/get-workout/:id', (req, res, next) => {
 
 });
 
+app.get('/api/workout/get-workout-test/:id', (req, res, next) => {
+  const userId = req.params.id;
+
+  if (!userId) {
+    throw new ClientError(400, 'all fields need to be completed');
+  }
+
+  const sql = `
+      select *
+           from "workoutSetups"
+          where "userId" = $1
+       order by "createdAt" desc
+      `;
+  const params = [userId];
+  db.query(sql, params)
+    .then(result => {
+      // res.status(201).json(result.rows[0]);
+      const nextSql = `
+      select "templateId", "workoutId", "exerciseId",
+             "w"."name" as "workoutDay", "e"."name" as "exerciseName",
+             "dateFinished"
+        from "workoutCreateYourOwn" as "w"
+        join "exercises" as "e" using ("workoutId")
+       where "templateId" = $1
+      `;
+      const nextParams = [result.rows[0].templateId];
+      db.query(nextSql, nextParams)
+        .then(result => {
+          const tempWorkout = [];
+          let day = {};
+          let exercise = [];
+          let dayName = '';
+          const testArray = [];
+          const workout = result.rows;
+          for (let i = 0; i < workout.length; i++) {
+            // res.status(201).json(result[i]);
+            testArray.push(workout[i]);
+            if (dayName !== workout[i].workoutDay) {
+              if (exercise.length > 0) {
+                day = {
+                  workoutName: dayName,
+                  exercise: exercise
+                };
+                tempWorkout.push(day);
+                day = {};
+                exercise = [];
+              }
+              dayName = workout[i].workoutDay;
+            }
+            if (dayName === workout[i].workoutDay) {
+              exercise.push(workout[i]);
+            }
+            if (i === workout.length - 1) {
+              day = {
+                workoutName: dayName,
+                exercise: exercise
+              };
+              tempWorkout.push(day);
+            }
+          }
+          res.status(201).json(tempWorkout);
+        })
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
+
+});
+
 app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`express server listening on port ${process.env.PORT}`);
