@@ -1,61 +1,67 @@
 import React from 'react';
 import Redirect from '../components/redirect';
 import AppContext from '../lib/app-context';
-import WorkoutForm from '../components/workout-widget';
+import WorkoutForm from '../components/workout-form';
+import WorkoutDays from '../components/workout-days';
 
 const styles = {
-  title: {
+  headerTitle: {
     fontSize: 30,
     fontWeight: 'bold'
-  },
-  openCalc: {
-    color: '#1bc270',
-    textDecoration: 'underline'
   }
 };
-export default class MyWorkout extends React.Component {
 
-  render() {
-    const { user, route, tempUser, handleFullModal, handleProfileCreation, handleMaxUpdate } = this.context;
-    if (!tempUser && !user) return <Redirect to="log-in" />;
+export default class MyWorkout extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+    };
+    this.renderPage = this.renderPage.bind(this);
+  }
+
+  renderPage() {
+    const { user, route, tempUser, handleCreation } = this.context;
     const altUser = !tempUser
       ? user
       : tempUser;
+    if (route.path === 'create-workout' || route === 'update-workout') {
+      return <WorkoutForm
+        key={route.path}
+        action={route.path}
+        userData={altUser}
+        onCreation={handleCreation} />;
+    }
+    if (route.path === 'workout-days') {
+      return <WorkoutDays
+        key={route.path}
+        action={route.path}
+        userData={altUser} />;
+    }
+  }
 
-    const titleMessage = route.path === 'create-maxes'
-      ? "Let's Get Started"
-      : 'Current Training Maxes';
+  render() {
+    const { user, route, tempUser } = this.context;
+    const { renderPage } = this;
+    if (!tempUser && !user) return <Redirect to="log-in" />;
 
-    const maxesDescription = route.path === 'create-maxes'
-      ? ''
-      : 'hidden';
+    // const altUser = !tempUser
+    //   ? user
+    //   : tempUser;
+
+    let titleMessage = route.path === 'create-workout'
+      ? 'Create Workout'
+      : 'Edit Workout';
+
+    titleMessage = route.path === 'workout-days'
+      ? 'My Workout'
+      : 'Edit Workout';
 
     return (
       <div className='widget-container'>
-        <header className='text-center' style={styles.title}>
+        <header className='text-center' style={styles.headerTitle}>
           {titleMessage}
         </header>
-        <p className={`maxes-text ${maxesDescription}`}>
-          What is your 1 rep max for the following exercises?
-          (If you&apos;re not sure, that&apos;s okay.
-          Use this <span onClick={handleFullModal} style={styles.openCalc}>
-            calculator
-          </span>
-          )</p>
-        <div>
-          <div >
-            <div>
-              <WorkoutForm
-                key={route.path}
-                action={route.path}
-                openModal={handleFullModal}
-                userData={altUser}
-                onRegister={handleProfileCreation}
-                onUpdate={handleMaxUpdate}
-              />
-            </div>
-          </div>
-        </div>
+        {renderPage()}
       </div>
     );
   }

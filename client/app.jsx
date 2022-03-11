@@ -23,13 +23,15 @@ export default class App extends React.Component {
       tempUser: null,
       isOpen: false,
       modal: false,
-      maxes: {}
+      maxes: {},
+      workout: []
     };
     this.handleFullModal = this.handleFullModal.bind(this);
     this.handleRegister = this.handleRegister.bind(this);
     this.handleLogIn = this.handleLogIn.bind(this);
     this.handleProfileCreation = this.handleProfileCreation.bind(this);
     this.handleMaxUpdate = this.handleMaxUpdate.bind(this);
+    this.handleCreation = this.handleCreation.bind(this);
   }
 
   componentDidMount() {
@@ -54,6 +56,39 @@ export default class App extends React.Component {
               currentUnit: maxesUnit
             }
           });
+        });
+      fetch(`/api/workout/get-workout/${user.userId}`)
+        .then(res => res.json())
+        .then(result => {
+          const tempWorkout = [];
+          let day = {};
+          let exercise = [];
+          let dayName = '';
+          for (let i = 0; i < result.length; i++) {
+            if (dayName !== result[i].workoutDayName) {
+              if (exercise.length > 0) {
+                day = {
+                  workoutName: dayName,
+                  exercise: exercise
+                };
+                tempWorkout.push(day);
+                day = {};
+                exercise = [];
+              }
+              dayName = result[i].workoutDayName;
+            }
+            if (dayName === result[i].workoutDayName) {
+              exercise.push(result[i]);
+            }
+            if (i === result.length - 1) {
+              day = {
+                workoutName: dayName,
+                exercise: exercise
+              };
+              tempWorkout.push(day);
+            }
+          }
+          this.setState({ workout: tempWorkout });
         });
     }
   }
@@ -82,13 +117,64 @@ export default class App extends React.Component {
 
   handleLogIn(result) {
     const { user, token } = result;
+    fetch(`/api/account/get-maxes/${user.userId}`)
+      .then(res => res.json())
+      .then(result => {
+        const { benchMax, squatMax, deadliftMax, ohpMax, maxesUnit } = result;
+        this.setState({
+          user: user,
+          maxes: {
+            currentBench: benchMax,
+            currentSquat: squatMax,
+            currentDeadlift: deadliftMax,
+            currentOhp: ohpMax,
+            currentUnit: maxesUnit
+          }
+        });
+      });
     window.localStorage.setItem('react-context-jwt', token);
-    this.setState({ user });
   }
 
   handleFullModal() {
     const { isOpen } = this.state;
     this.setState({ isOpen: !isOpen });
+  }
+
+  handleCreation() {
+    const { user } = this.state;
+    fetch(`/api/workout/get-workout/${user.userId}`)
+      .then(res => res.json())
+      .then(result => {
+        const tempWorkout = [];
+        let day = {};
+        let exercise = [];
+        let dayName = '';
+        for (let i = 0; i < result.length; i++) {
+          if (dayName !== result[i].workoutDayName) {
+            if (exercise.length > 0) {
+              day = {
+                workoutName: dayName,
+                exercise: exercise
+              };
+              tempWorkout.push(day);
+              day = {};
+              exercise = [];
+            }
+            dayName = result[i].workoutDayName;
+          }
+          if (dayName === result[i].workoutDayName) {
+            exercise.push(result[i]);
+          }
+          if (i === result.length - 1) {
+            day = {
+              workoutName: dayName,
+              exercise: exercise
+            };
+            tempWorkout.push(day);
+          }
+        }
+        this.setState({ workout: tempWorkout });
+      });
   }
 
   renderPage() {
@@ -105,7 +191,8 @@ export default class App extends React.Component {
     if (path === 'update-maxes' || path === 'create-maxes') {
       return <TrainingMaxes />;
     }
-    if (path === 'workout' || path === 'create-workout') {
+    if (path === 'workout' || path === 'workout-days' ||
+      path === 'create-workout' || path === 'update-workout') {
       return <MyWorkout />;
     }
 
@@ -114,8 +201,8 @@ export default class App extends React.Component {
 
   render() {
     if (this.state.isAuthorizing) return null;
-    const { user, route, tempUser, isOpen, maxes } = this.state;
-    const { handleRegister, handleLogIn, handleFullModal, handleProfileCreation, handleMaxUpdate } = this;
+    const { user, route, tempUser, isOpen, maxes, workout } = this.state;
+    const { handleRegister, handleLogIn, handleFullModal, handleProfileCreation, handleMaxUpdate, handleCreation } = this;
     const contextValue = {
       user,
       route,
@@ -125,7 +212,9 @@ export default class App extends React.Component {
       handleFullModal,
       handleProfileCreation,
       maxes,
-      handleMaxUpdate
+      handleMaxUpdate,
+      handleCreation,
+      workout
     };
     return (
     <AppContext.Provider value={contextValue}>

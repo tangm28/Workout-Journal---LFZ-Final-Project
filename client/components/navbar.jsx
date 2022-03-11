@@ -53,6 +53,17 @@ export default class Navbar extends React.Component {
           </div>
       );
     }
+    if (this.context.route.path === 'create-workout' || this.context.route.path === 'workout-days') {
+      return (
+        <div className='' style={styles.container}>
+          <div className='row nav-container align-center justify-between'>
+            <div className=''>
+              <i className="fas fa-arrow-left" style={styles.iconSize} onClick={this.handleClick}></i>
+            </div>
+          </div>
+        </div>
+      );
+    }
   }
 
   handleClick(event) {

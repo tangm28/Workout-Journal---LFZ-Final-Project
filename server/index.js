@@ -94,7 +94,6 @@ app.post('/api/account/create-profile', (req, res, next) => {
     userWeight, userWeightUnit,
     goal, activityLevel, userId
   } = req.body;
-  // console.log(req.body);
   if (!firstName || !lastName || !sex ||
     !heightPrimary || !heightSecondary || !userHeightUnit ||
     !userWeight || !userWeightUnit ||
@@ -104,9 +103,6 @@ app.post('/api/account/create-profile', (req, res, next) => {
   if (Number(heightPrimary) < 0 || Number(heightSecondary) < 0 || Number(userWeight) < 0) {
     throw new ClientError(401, 'please enter valid positive number');
   }
-  // if (!Number(heightPrimary) || !Number(heightSecondary) || !Number(userWeight)) {
-  //   throw new ClientError(401, 'please enter valid positive number');
-  // }
   const sql = `
         insert into "profiles" (
           "firstName", "lastName" , "sex",
@@ -190,6 +186,114 @@ app.get('/api/account/get-maxes/:id', (req, res, next) => {
     .then(result => {
       const [user] = result.rows;
       res.status(201).json(user);
+    })
+    .catch(err => next(err));
+
+});
+
+app.post('/api/workout/create-workout', (req, res, next) => {
+  const {
+    template, numOfDays, userId
+  } = req.body;
+
+  if (!template || !numOfDays) {
+    throw new ClientError(400, 'all fields need to be completed');
+  }
+  const sql = `
+        insert into "workoutSetups" (
+          "template", "numOfDays", "userId"
+          )
+        values ($1, $2, $3)
+        returning *
+      `;
+  const params = [
+    template, Number(numOfDays), Number(userId)
+  ];
+  db.query(sql, params)
+    .then(result => {
+      const [workout] = result.rows;
+      res.status(201).json(workout);
+    })
+    .catch(err => next(err));
+
+});
+
+app.post('/api/workout/create-your-own', (req, res, next) => {
+  const {
+    workoutName, templateId
+  } = req.body;
+
+  if (!workoutName || !templateId) {
+    throw new ClientError(400, 'all fields need to be completed');
+  }
+  const sql = `
+        insert into "workoutCreateYourOwn" (
+          "name", "templateId"
+          )
+        values ($1, $2)
+        returning *
+      `;
+  const params = workoutName === 'empty'
+    ? ['', Number(templateId)]
+    : [workoutName, Number(templateId)];
+  db.query(sql, params)
+    .then(result => {
+      const [day] = result.rows;
+      res.status(201).json(day);
+    })
+    .catch(err => next(err));
+
+});
+
+app.post('/api/workout/create-exercise', (req, res, next) => {
+  const {
+    exerciseName, workoutId
+  } = req.body;
+
+  if (!exerciseName || !workoutId) {
+    throw new ClientError(400, 'all fields need to be completed');
+  }
+  const sql = `
+        insert into "exercises" (
+          "name", "workoutId"
+          )
+        values ($1, $2)
+        returning *
+      `;
+  const params = [exerciseName, Number(workoutId)];
+  db.query(sql, params)
+    .then(result => {
+      const [day] = result.rows;
+      res.status(201).json(day);
+    })
+    .catch(err => next(err));
+
+});
+
+app.get('/api/workout/get-workout/:id', (req, res, next) => {
+  const userId = req.params.id;
+
+  if (!userId) {
+    throw new ClientError(400, 'all fields need to be completed');
+  }
+
+  const sql = `
+      select "userId", "templateId", "workoutId", "exerciseId",
+             "template", "numOfDays",
+             "cyo"."name" as "workoutDayName", "e"."name" as "exerciseName",
+             "dateFinished"
+        from "workoutSetups"
+        join "workoutCreateYourOwn" as "cyo" using ("templateId")
+         join "exercises" as "e" using ("workoutId")
+        where "createdAt" =
+              (SELECT max("createdAt")
+                 from "workoutSetups")
+              and "userId" = $1
+      `;
+  const params = [userId];
+  db.query(sql, params)
+    .then(result => {
+      res.status(201).json(result.rows);
     })
     .catch(err => next(err));
 
