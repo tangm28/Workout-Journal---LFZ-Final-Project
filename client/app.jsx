@@ -140,7 +140,7 @@ export default class App extends React.Component {
     this.setState({ isOpen: !isOpen });
   }
 
-  handleCreation(result) {
+  handleCreation() {
     const { user } = this.state;
     fetch(`/api/workout/get-workout/${user.userId}`)
       .then(res => res.json())
