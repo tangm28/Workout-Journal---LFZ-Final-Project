@@ -65,12 +65,34 @@ export default class WorkoutWidget extends React.Component {
       currentDay: 1
     };
     this.handleClick = this.handleClick.bind(this);
+    this.goRight = this.goRight.bind(this);
+    this.goLeft = this.goLeft.bind(this);
     this.renderWorkoutCreated = this.renderWorkoutCreated.bind(this);
     this.renderCreateWorkout = this.renderCreateWorkout.bind(this);
   }
 
   handleClick(event) {
-    window.location.hash = 'create-workout';
+    if (this.context.workout.length > 0) {
+      window.location.hash = 'workout-days';
+    } else {
+      window.location.hash = 'create-workout';
+    }
+  }
+
+  goRight() {
+    if (this.state.currentDay === this.context.workout.length) {
+      this.setState({ currentDay: 1 });
+    } else {
+      this.setState({ currentDay: this.state.currentDay + 1 });
+    }
+  }
+
+  goLeft() {
+    if (this.state.currentDay === 1) {
+      this.setState({ currentDay: this.context.workout.length });
+    } else {
+      this.setState({ currentDay: this.state.currentDay - 1 });
+    }
   }
 
   renderDays() {
@@ -115,13 +137,19 @@ export default class WorkoutWidget extends React.Component {
       );
     });
 
+    let currentDayTitle = this.context.workout[this.state.currentDay - 1].workoutName;
+    console.log(currentDayTitle);
+    if (currentDayTitle === '') {
+      currentDayTitle = 'Day ' + this.state.currentDay;
+    }
+
     return (
       <div>
         <div className="">
           <header className='row align-center justify-between' style={styles.title}>
-            <i className="fas fa-chevron-left" style={styles.carouselArrow}></i>
-            Day 1
-            <i className="fas fa-chevron-right" style={styles.carouselArrow}></i>
+            <i className="fas fa-chevron-left" style={styles.carouselArrow} onClick={this.goLeft}></i>
+            {currentDayTitle}
+            <i className="fas fa-chevron-right" style={styles.carouselArrow} onClick={this.goRight}></i>
           </header>
         </div>
         <div className='row justify-between text-center'>
